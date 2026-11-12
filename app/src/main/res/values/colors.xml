@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Espelha as CSS vars do PhysicalCloud.css -->
+    <color name="bg_main">#0a0a0a</color>
+    <color name="bg_sidebar">#111111</color>
+    <color name="accent">#39FF8F</color>
+    <color name="accent_dark">#22cc6e</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_muted">#9a9a9a</color>
+    <color name="launcher_background">#0A0A0A</color>
+</resources>

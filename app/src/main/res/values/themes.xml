@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Tema da SplashScreen (exibido antes do WebView carregar) -->
+    <!-- BLOCO 5: Usa o tema PostSplashScreenTheme após o splash desaparecer -->
+    <style name="Theme.PhysicalCloud.Starting" parent="Theme.SplashScreen">
+        <!-- Ícone central na splash (use o launcher icon) -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <!-- Cor de fundo da splash, igual ao fundo principal do CSS -->
+        <item name="windowSplashScreenBackground">@color/bg_main</item>
+        <!-- Tema que substitui o splash após o app estar pronto -->
+        <item name="postSplashScreenTheme">@style/Theme.PhysicalCloud</item>
+    </style>
+
+    <!-- Tema principal do app -->
+    <style name="Theme.PhysicalCloud" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/bg_main</item>
+        <item name="android:colorPrimary">@color/accent</item>
+        <item name="android:colorPrimaryVariant">@color/accent_dark</item>
+        <item name="android:colorAccent">@color/accent</item>
+
+        <!-- Barra de status preta transparente -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+
+</resources>

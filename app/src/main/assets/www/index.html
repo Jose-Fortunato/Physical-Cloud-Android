@@ -1,0 +1,2368 @@
+<!-- ═══ INÍCIO DA PARTE 1/3 ═══ -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physical Cloud</title>
+  <link rel="stylesheet" href="PhysicalCloud.css">
+</head>
+<body>
+
+  <div class="app">
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Menu">&#9776;</button>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.5 19H9C6.23858 19 4 16.7614 4 14C4 11.4805 5.86486 9.39688 8.29261 9.04353C8.96302 6.18154 11.5278 4 14.5 4C17.7445 4 20.4558 6.36353 20.9355 9.47678C22.6924 10.0123 24 11.6417 24 13.5C24 16.5376 21.5376 19 18.5 19H17.5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M9 15L11 13L13 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M11 13V18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M17 13L15 15L13 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M15 15V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="logo-text">Physical<span class="accent">Cloud</span></span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="dispositivos">Dispositivos conectados</button>
+        <button class="nav-item" data-tab="nuvem">Envio de arquivos</button>
+      </nav>
+
+      <button class="nav-item" id="btn-abrir-feedback">★ Avaliar o App</button>
+                 <button class="nav-item" id="btn-abrir-app-futuro">🔄 Funcionalidade extra dos apps - Conexão automática</button>
+      <button class="nav-item" id="btn-abrir-sobre">☁ Sobre o Physical Cloud</button>
+      <button class="nav-item" id="btn-abrir-privacidade">⌑ Privacidade e termos</button>
+    </aside>
+
+    <main class="content">
+      <section id="dispositivos" class="tab-panel active">
+        <h1>Dispositivos conectados</h1>
+                <div class="aviso-web">
+          <strong>⚠️ Versão Web — conexão em segundo plano:</strong>
+          Para manter a conexão ativa ao trocar de app:
+          <ol style="margin: 8px 0 4px 20px; padding: 0; line-height: 1.6;">
+            <li>Abra as configurações do Chrome para este site e desative a <strong>Otimização de bateria</strong>.</li>
+            <li>
+              Dependendo do fabricante e da versão do sistema, também pode ser necessário liberar o Chrome em opções como
+              <strong>Atividade em segundo plano</strong>, <strong>Inicialização automática</strong> ou <strong>Restrições de execução</strong>
+              — os nomes variam por aparelho.
+            </li>
+            <li>
+              Se a conexão cair ao trocar de app, verifique a seção de <strong>Bateria</strong> do sistema para este navegador.
+              O Physical Cloud não consegue contornar as políticas de economia de energia do sistema operacional. Caso o problema persista recomendamos a troca para o app.
+            </li>
+          </ol>
+        </div>
+        <p class="subtitle">Conecte um celular, computador ou notebook para começar a trocar arquivos.</p>
+
+        <!-- ── Bloco C: Seção "Seu dispositivo" (modo automático ativo) ── -->
+        <div id="auto-meu-dispositivo" style="display:none; margin-bottom: 24px;">
+          <div class="auto-device-card">
+            <div class="auto-device-header">
+              <span class="auto-device-title">Seu dispositivo</span>
+              <button class="secondary-btn auto-desativar-btn" id="btn-auto-desativar">Desativar modo</button>
+            </div>
+            <div class="auto-device-row">
+              <span class="auto-device-label">Nome:</span>
+              <span class="auto-device-value" id="auto-nome-dispositivo">—</span>
+            </div>
+            <div class="auto-device-row">
+              <span class="auto-device-label">ID:</span>
+              <span class="auto-device-value auto-id-text" id="auto-id-display">PC-···························</span>
+              <button class="auto-copy-btn" id="btn-auto-copiar-id" title="Copiar ID">Copiar</button>
+            </div>
+            <div class="auto-aviso">
+              ⚠ Qualquer dispositivo com este ID pode enviar arquivos sem confirmação.
+              Compartilhe só com seus próprios dispositivos ou com quem você confia.
+            </div>
+            <button class="secondary-btn auto-new-id-btn" id="btn-auto-novo-id">Gerar novo ID</button>
+          </div>
+        </div>
+
+        <!-- ── Bloco C: Toggle do Modo Conexão Automática ── -->
+        <div class="auto-toggle-container" id="auto-toggle-container">
+          <div class="auto-toggle-info">
+            <span class="auto-toggle-title">Modo Conexão Automática</span>
+            <span class="auto-toggle-desc">Deixe este aparelho disponível para receber arquivos à distância. Use seu ID em outro Physical Cloud para enviar arquivos para cá, mesmo que você esteja longe do dispositivo.</span>
+          </div>
+          <button class="auto-toggle-btn" id="btn-auto-toggle" aria-pressed="false">Ativar</button>
+        </div>
+        <div id="auto-status-conexao" role="status" aria-live="polite" style="display:none;margin:-12px 0 20px;padding:10px 12px;border:1px solid #80652e;border-radius:7px;background:#211f1a;color:#f1c66a;font-size:13px;line-height:1.45;"></div>
+
+        <div class="device-actions" id="device-actions" style="display:none">
+          <button class="secondary-btn" id="btn-conectar-extra">Conectar outro dispositivo</button>
+          <button class="secondary-btn" id="btn-conectar-por-id">Conectar por ID</button>
+        </div>
+
+        <div class="empty-state" id="empty-dispositivos">
+          <p>Nenhum dispositivo conectado ainda.</p>
+          <button class="primary-btn" id="btn-conectar">Conectar dispositivo</button>
+          <button class="secondary-btn" style="margin-top: 8px;" id="btn-conectar-por-id-empty">Conectar por ID</button>
+        </div>
+
+        <div class="device-list" id="lista-dispositivos" style="display:none"></div>
+         <!-- NOVO: Seção de Dispositivos Conhecidos -->
+        <div id="conhecidos-container" style="display: none; margin-top: 32px;">
+          <h2 class="section-title">Dispositivos já pareados</h2>
+          <div id="lista-conhecidos" class="device-list"></div>
+        </div>
+      </section>
+
+      <section id="nuvem" class="tab-panel">
+        <h1>Envio de arquivos</h1>
+        <p class="subtitle">Envie e receba arquivos diretamente entre dispositivos via P2P.</p>
+
+        <div id="nuvem-sem-canal" class="empty-state">
+          <p>Nenhum dispositivo conectado.<br>Conecte um dispositivo primeiro.</p>
+          <button class="primary-btn" id="btn-ir-dispositivos">Ver dispositivos</button>
+        </div>
+
+        <div id="nuvem-com-canal" style="display:none">
+          <div id="destino-container" class="destino-container" style="display:none">
+            <label class="destino-label" for="destino-select">Enviar para:</label>
+            <select id="destino-select" class="destino-select"></select>
+          </div>
+
+          <div class="nuvem-acoes">
+            <button class="primary-btn" id="btn-enviar">
+              <span class="btn-icon">&#8679;</span> Selecionar e Enviar arquivo
+            </button>
+            <button class="secondary-btn" id="btn-enviar-pasta">📁 Selecionar Pasta</button>
+            <button class="secondary-btn" id="btn-compartilhar-pasta" style="display:none; border-color: var(--accent); color: var(--accent);">
+              📂 Puxar arquivos do dispositivo conectado
+            </button>
+            <button class="secondary-btn" id="btn-explorar-servidor" style="display:none; border-color: var(--accent); color: var(--accent);">
+              🔍 Puxar arquivos do servidor
+            </button>
+          </div>
+
+          
+        </div>
+        <div id="transfers-ativos" style="display:none">
+            <h2 class="section-title">Em andamento</h2>
+            <div id="lista-transfers" class="lista-transfers"></div>
+          </div>
+           <div id="historico-container" style="display:none; margin-top: 32px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h2 class="section-title" style="margin: 0;">Histórico Recente (Máx. 50)</h2>
+            <button class="secondary-btn" id="btn-limpar-historico" style="font-size: 11px; padding: 4px 8px;">Limpar tudo</button>
+          </div>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 280px; background: var(--bg-sidebar); border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px;">
+              <h3 style="font-size: 14px; margin-bottom: 12px; color: var(--text-muted);">⬆ Enviados</h3>
+              <div id="lista-enviados" class="lista-recebidos"></div>
+            </div>
+            <div style="flex: 1; min-width: 280px; background: var(--bg-sidebar); border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px;">
+              <h3 style="font-size: 14px; margin-bottom: 12px; color: var(--text-muted);">⬇ Recebidos</h3>
+              <div id="lista-recebidos" class="lista-recebidos"></div>
+            </div>
+          </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal de código (servidor) -->
+  <div class="modal-overlay" id="modal-codigo">
+    <div class="modal-box">
+      <button class="modal-close" id="btn-fechar-modal">&times;</button>
+      <h2>Seu código de conexão</h2>
+      <p class="modal-subtitle">Compartilhe este código com o outro dispositivo para conectá-lo.</p>
+      <p class="codigo-display" id="codigo-texto"></p>
+      <div class="code-container">
+        <div class="code-digit"></div>
+        <div class="code-digit"></div>
+        <div class="code-digit"></div>
+        <div class="code-digit"></div>
+        <div class="code-digit"></div>
+        <div class="code-digit"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de conectar -->
+  <div class="modal-overlay" id="modal-conectar">
+    <div class="modal-box">
+      <button class="modal-close" id="btn-fechar-conectar">&times;</button>
+      <h2>Conectar a um dispositivo</h2>
+      <p class="modal-subtitle">Digite o código de 6 dígitos exibido no outro dispositivo.</p>
+      <div class="code-input-container">
+        <input class="code-input-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" />
+        <input class="code-input-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" />
+        <input class="code-input-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" />
+        <input class="code-input-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" />
+        <input class="code-input-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" />
+        <input class="code-input-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off" />
+      </div>
+    </div>
+  </div>
+
+ 
+   <!-- Modal de recebimento — Bloco B / Bug #8 (preferências separadas) -->
+  <div class="modal-overlay" id="modal-recebimento">
+    <div class="modal-box">
+      <h2>Receber arquivos?</h2>
+      <p class="subtitle" id="recebimento-texto">Um dispositivo quer enviar arquivos.</p>
+      <div class="recebimento-info" style="background: #121212; padding: 12px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #2a2a2a; text-align: left;">
+        <div style="font-weight: 600; color: #fff;" id="recebimento-nome">Receber 0 arquivos</div>
+        <div style="font-size: 12px; color: #9a9a9a; margin-top: 4px;" id="recebimento-tamanho">0 B no total</div>
+        <div id="recebimento-lotes" style="font-size: 12px; color: #ffd280; margin-top: 6px; display: none;"></div>
+      </div>
+      <p style="font-size: 12px; color: #9a9a9a; margin-bottom: 16px; text-align: left; line-height: 1.5;">
+        Você autoriza uma única vez. Os arquivos serão gravados no destino que você escolher, sem novas confirmações.
+      </p>
+      <div class="recebimento-opcoes">
+        <label>
+          <input type="checkbox" id="nao-mostrar-recebimento">
+          Ocultar esta tela nas próximas vezes
+        </label>
+        <div class="opcao-hint">A escolha do destino continua sendo feita a cada recebimento.</div>
+        <label id="label-salvar-sempre" style="margin-top: 4px;">
+          <input type="checkbox" id="salvar-sempre-nesta-pasta">
+          Salvar sempre nesta pasta (sem escolher a cada vez)
+        </label>
+        <div class="opcao-hint" id="hint-salvar-sempre" style="display: none;">
+          Você precisará escolher a pasta uma vez. Depois disso, os arquivos futuros serão salvos nela automaticamente, enquanto a permissão do navegador continuar válida.
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button class="primary-btn" id="btn-aceitar-recebimento">Aceitar</button>
+        <button class="secondary-btn" id="btn-recusar-recebimento" style="color: #ff6b6b; border-color: #ff6b6b;">Recusar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de feedback -->
+  <div class="modal-overlay" id="modal-feedback">
+    <div class="modal-box">
+      <button class="modal-close" id="btn-fechar-feedback">&times;</button>
+      <h2>Avaliar o App</h2>
+      <p class="subtitle">Sua avaliação nos ajuda a melhorar.</p>
+      <div class="star-rating" id="star-rating">
+        <span class="star" data-nota="1">★</span>
+        <span class="star" data-nota="2">★</span>
+        <span class="star" data-nota="3">★</span>
+        <span class="star" data-nota="4">★</span>
+        <span class="star" data-nota="5">★</span>
+      </div>
+      <select id="feedback-categoria" style="width: 100%; background: #121212; color: #fff; border: 1px solid #2a2a2a; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; font-size: 14px;">
+        <option value="elogio">Elogio</option>
+        <option value="sugestao">Sugestão</option>
+        <option value="bug">Bug</option>
+        <option value="outro">Outro</option>
+      </select>
+      <textarea id="feedback-texto" rows="4"  maxlength="2000" placeholder="Conte-nos mais (opcional)" style="width: 100%; background: #121212; color: #fff; border: 1px solid #2a2a2a; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; font-size: 14px; resize: vertical; font-family: inherit;"></textarea>
+      <p id="feedback-contador" style="font-size: 11px; color: #6e6e6e; text-align: right; margin: -8px 0 12px;">0 / 2000</p>
+      <p id="feedback-status" style="display: none; font-size: 13px; margin-bottom: 12px;"></p>
+      <button class="primary-btn" id="btn-enviar-feedback">Enviar Feedback</button>
+    </div>
+  </div>
+
+  <!-- Modal do Explorador Remoto -->
+  <div class="modal-overlay" id="modal-explorador">
+    <div class="modal-box" style="text-align: left; max-width: 640px; display: flex; flex-direction: column; max-height: 85vh;">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+        <button id="btn-explorador-voltar" class="secondary-btn" style="padding: 6px 12px; display: none;">← Voltar</button>
+        <h2 style="margin: 0; font-size: 18px; flex: 1;">Arquivos no dispositivo remoto</h2>
+        <button class="modal-close" id="btn-fechar-explorador" style="position: static;">&times;</button>
+      </div>
+      <p class="subtitle" id="explorador-caminho" style="margin-bottom: 8px; font-size: 12px; color: var(--text-muted);">Raiz</p>
+      <p class="subtitle" id="explorador-status" style="margin-bottom: 12px;">Carregando...</p>
+      <div id="lista-explorador" class="explorer-list"></div>
+      <!-- FASE 1 / Bug #13: sem display duplicado no inline -->
+      <div id="explorador-paginacao" style="margin-top: 12px; gap: 8px; align-items: center; justify-content: space-between;">
+        <button class="secondary-btn" id="btn-pagina-anterior" style="padding: 6px 12px;">← Anterior</button>
+        <span id="explorador-pagina-texto" style="font-size: 12px; color: var(--text-muted);">Página 1 / 1</span>
+        <button class="secondary-btn" id="btn-pagina-proxima" style="padding: 6px 12px;">Próxima →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de aviso de lote (>100 arquivos) -->
+  <div class="modal-overlay" id="modal-lote">
+    <div class="modal-box" style="text-align: left;">
+      <h2>Transferência em lotes</h2>
+      <p class="subtitle" id="lote-total">Você selecionou vários arquivos.</p>
+      <p style="font-size: 14px; color: #ccc; line-height: 1.6; margin-bottom: 20px;">
+        Para garantir uma transferência estável, processaremos os arquivos em blocos de até 100 por vez.
+        Após a conclusão de cada bloco, iniciaremos automaticamente o próximo até que todos os arquivos sejam transferidos.
+        <br><br>Não é necessário realizar nenhuma ação adicional.
+      </p>
+      <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 13px; color: #9a9a9a;">
+        <input type="checkbox" id="nao-mostrar-lote">
+        Não mostrar esta mensagem novamente
+      </label>
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button class="primary-btn" id="btn-ok-lote">Entendi</button>
+      </div>
+    </div>
+  </div>
+    <!-- Modal de Funcionalidades e vantagens -->
+    <!-- Modal da Versão App (roadmap / vantagens do app sobre o site) -->
+  <div class="modal-overlay" id="modal-app-futuro">
+    <div class="modal-box pc-auto-modal">
+      <button class="modal-close" id="btn-fechar-app-futuro">&times;</button>
+      <h2>Conexão automática</h2>
+      <div class="pc-auto-step"><span>1</span><div><strong>Ative o modo automático no app do dispositivo que vai receber</strong><p>No aplicativo Physical Cloud instalado nesse aparelho, habilite o modo automático. O app gera e mantém um ID permanente vinculado ao dispositivo.</p></div></div>
+      <div class="pc-auto-step"><span>2</span><div><strong>Use o ID em outro app Physical Cloud</strong><p>No outro dispositivo, abra o aplicativo Physical Cloud, escolha “Conectar por ID” e informe o ID do aparelho que está com o modo automático ativado. Compartilhe esse ID somente com pessoas em quem você confia.</p></div></div>
+      <div class="pc-auto-step"><span>3</span><div><strong>A conexão é aceita automaticamente</strong><p>Quando o pedido compatível chega ao dispositivo com o modo automático ativo, ele pode ser aceito sem uma aprovação manual a cada conexão.</p></div></div>
+      <div class="pc-info-highlight"><strong>Importante:</strong> o modo automático deve estar ativo no dispositivo de destino. Proteja seu ID: quem tiver acesso a ele poderá tentar iniciar uma conexão. Desative o modo automático se não quiser mais aceitar esse tipo de solicitação.</div>
+      <button class="primary-btn" id="btn-app-futuro-ok">Entendi</button>
+    </div>
+  </div>
+
+  <!-- Informações institucionais: sobre, privacidade e termos -->
+  <div class="modal-overlay" id="modal-informacoes">
+    <div class="modal-box pc-info-modal">
+      <button class="modal-close" id="btn-fechar-informacoes" aria-label="Fechar">&times;</button>
+      <div class="pc-info-brand"><span class="pc-info-mark">☁</span><span>Physical<span class="accent">Cloud</span></span></div>
+      <nav class="pc-info-tabs" aria-label="Informações do Physical Cloud">
+        <button class="pc-info-tab active" data-info-tab="sobre">Sobre</button>
+        <button class="pc-info-tab" data-info-tab="privacidade">Privacidade</button>
+        <button class="pc-info-tab" data-info-tab="termos">Termos de uso</button>
+      </nav>
+      <section class="pc-info-panel active" data-info-panel="sobre">
+        <h2>Uma ponte entre seus dispositivos.</h2>
+        <p>O Physical Cloud é uma ferramenta para transferir arquivos entre dispositivos conectados diretamente por iniciativa dos próprios usuários. A proposta é facilitar o envio e o recebimento de arquivos entre celular, computador e outros aparelhos, sem transformar o Physical Cloud em um serviço de hospedagem ou armazenamento de arquivos.</p>
+        <div class="pc-info-highlight"><strong>A ideia central</strong><br>Você escolhe com qual dispositivo deseja se conectar e decide quais arquivos enviar, receber ou disponibilizar. O Physical Cloud fornece os recursos técnicos para estabelecer a conexão e realizar a transferência; a escolha do outro dispositivo é sua.</div>
+        <h3>Como funciona</h3>
+        <ul><li>Os dispositivos estabelecem uma sessão de conexão usando os mecanismos de sinalização do serviço.</li><li>Após a conexão, a transferência é feita entre os dispositivos por meio de tecnologia de comunicação ponto a ponto (WebRTC).</li><li>O Physical Cloud não escolhe destinatários por você nem verifica se um arquivo é confiável ou seguro.</li></ul>
+        <p>Conecte-se somente a dispositivos que você conhece ou nos quais confia. Confira a origem e o conteúdo dos arquivos antes de abrir ou executar qualquer item recebido.</p>
+      </section>
+      <section class="pc-info-panel" data-info-panel="privacidade">
+        <h2>Política de Privacidade</h2><p class="pc-info-updated">Última atualização: 9 de novembro de 2026</p>
+        <h3>1. Escopo e funcionamento</h3><p>O Physical Cloud é uma ferramenta de conexão e transferência de arquivos entre dispositivos escolhidos pelos usuários. Não é uma rede social, não seleciona contatos e não se destina a armazenar arquivos em uma nuvem pessoal.</p>
+        <h3>2. IDs, identificadores e dados técnicos</h3><p>O ID do modo automático (formato PC- seguido de 27 caracteres aleatórios) é gerado no próprio dispositivo e seu texto original permanece no armazenamento local do aparelho. O aplicativo calcula localmente o SHA-256 desse código e envia somente o hash ao servidor de sinalização; o Supabase armazena esse hash para permitir localizar o dispositivo quando alguém informa o código. O código original não é enviado ao Supabase, ao servidor de sinalização nem aos outros usuários. Por meio do backend e do painel do Supabase, o desenvolvedor não recebe o código original e não consegue recuperá-lo de forma prática a partir do hash, graças à entropia dos 27 caracteres aleatórios. Códigos antigos de oito caracteres são substituídos por um novo código ao atualizar/ativar o modo automático.</p>
+        <p>Para encaminhar conexões, o servidor também processa identificadores técnicos aleatórios e pseudônimos dos dispositivos e das sessões, além do nome de exibição escolhido ou detectado. O administrador técnico do serviço pode processar esses identificadores e os hashes necessários ao roteamento; eles não são o ID PC- do modo automático e não permitem recuperar esse código de forma prática. O servidor pode associar temporariamente o hash do ID automático ao dispositivo conectado para entregar o pedido, mas não recebe o código original. Outros usuários não recebem o código PC- nem o hash de consulta. Se você enviar uma avaliação ou feedback, os dados preenchidos serão encaminhados ao serviço utilizado para receber esse feedback.</p>
+        <h3>3. Arquivos transferidos</h3><p>O Physical Cloud foi projetado para transferir arquivos diretamente entre os dispositivos conectados. O conteúdo dos arquivos não é enviado ao servidor de sinalização como parte do fluxo normal de transferência. O dispositivo destinatário recebe o arquivo enviado pelo outro dispositivo. O usuário deve considerar que redes, sistemas operacionais, versões e configurações podem afetar o funcionamento da conexão.</p>
+        <h3>4. Escolha de conexões e compartilhamento</h3><p>Você decide com quem se conectar, quais solicitações aceitar, quais pastas disponibilizar e quais arquivos enviar. Não compartilhe códigos ou IDs com pessoas desconhecidas. A ativação do modo automático pode permitir que solicitações compatíveis sejam aceitas sem uma confirmação individual, conforme a configuração do recurso.</p>
+        <h3>5. Segurança e arquivos maliciosos</h3><p>O Physical Cloud não garante que arquivos enviados por terceiros estejam livres de vírus, malware, spyware ou qualquer conteúdo nocivo. Não há garantia de análise antivírus ou certificação de segurança dos arquivos. Mantenha seu sistema e seu antivírus atualizados e verifique os arquivos recebidos antes de abri-los.</p>
+        <h3>6. Compartilhamento com terceiros e retenção</h3><p>Dados técnicos podem ser processados pela infraestrutura necessária para operar a sinalização e receber feedback. O Physical Cloud não deve ser usado para transmitir dados pessoais ou confidenciais sem que você tenha autorização e compreenda os riscos. Dados locais podem ser removidos ao apagar os dados do aplicativo ou desinstalá-lo, conforme o sistema operacional.</p>
+        <h3>7. Alterações e contato</h3><p>Esta política pode ser atualizada para refletir mudanças no aplicativo ou exigências legais. A versão vigente será disponibilizada nesta tela ou nos canais oficiais de distribuição do Physical Cloud.</p>
+      </section>
+      <section class="pc-info-panel" data-info-panel="termos">
+        <h2>Termos de Uso</h2><p class="pc-info-updated">Última atualização: 9 de novembro de 2026</p>
+        <h3>1. Aceitação e finalidade</h3><p>Ao utilizar o Physical Cloud, você concorda com estes termos. O Physical Cloud é uma ferramenta tecnológica destinada à conexão entre dispositivos e à transferência de arquivos. Não é um serviço de curadoria, verificação, hospedagem ou garantia de conteúdo.</p>
+        <h3>2. Responsabilidade pela conexão</h3><p>A decisão de conectar este dispositivo a outro é exclusivamente do usuário. Você é responsável por conferir códigos, IDs, nomes e demais informações de identificação, bem como por aceitar ou recusar solicitações. Não conecte seu dispositivo a pessoas ou aparelhos que não reconheça ou não confie.</p>
+        <h3>3. Responsabilidade pelo conteúdo</h3><p>O usuário que envia um arquivo é responsável por possuir os direitos e autorizações necessários para compartilhá-lo e por garantir que seu envio seja lícito. O usuário que recebe um arquivo é responsável por decidir se deseja abri-lo, executá-lo, armazená-lo ou removê-lo.</p>
+        <h3>4. Vírus, malware e danos</h3><p>O Physical Cloud não inspeciona nem garante a integridade ou a segurança dos arquivos transferidos. Arquivos podem conter vírus, malware, ransomware, spyware ou outros elementos prejudiciais. O Physical Cloud não assume responsabilidade por infecções, perda ou corrupção de dados, danos a dispositivos, indisponibilidade ou prejuízos decorrentes de arquivos enviados por outros usuários ou da decisão de estabelecer uma conexão, na máxima extensão permitida pela legislação aplicável. Nada nestes termos exclui responsabilidades que não possam ser afastadas por lei.</p>
+        <h3>5. Uso permitido</h3><p>É proibido utilizar o Physical Cloud para compartilhar conteúdo ilegal, violar direitos de terceiros, distribuir malware, acessar dispositivos sem autorização ou praticar qualquer atividade ilícita. Você não deve tentar comprometer, interromper ou explorar indevidamente a infraestrutura do serviço.</p>
+        <h3>6. Modo automático e permissões</h3><p>Recursos de conexão automática devem ser ativados conscientemente. O código PC- deve ser compartilhado somente com pessoas de confiança: quem o possuir poderá localizar o dispositivo e iniciar uma solicitação compatível. Quando o modo automático está ativo, o aplicativo pode aceitar essa conexão sem uma aprovação manual individual. O código original fica no dispositivo; o serviço utiliza seu hash para localizar o destino. Desative o modo automático e gere um novo código se suspeitar que alguém não autorizado teve acesso a ele.</p>
+        <h3>7. Disponibilidade e limitações</h3><p>O serviço é fornecido conforme disponibilidade. Conexões e transferências podem falhar ou ser interrompidas por fatores de rede, hardware, sistema operacional, bateria, permissões ou manutenção. Não garantimos funcionamento ininterrupto, compatibilidade universal ou recuperação de arquivos perdidos.</p>
+        <h3>8. Atualizações dos termos</h3><p>Estes termos podem ser alterados. O uso continuado após a publicação de uma nova versão representa aceitação dos termos atualizados, na medida permitida pela legislação aplicável.</p>
+      </section>
+      <button class="primary-btn pc-info-close" id="btn-ok-informacoes">Fechar</button>
+    </div>
+  </div>
+  <!-- Bloco B / Bug #3: modal de confirmação para compartilhar pasta -->
+  <div class="modal-overlay" id="modal-compartilhar-pasta">
+    <div class="modal-box">
+      <h2>Compartilhar pasta?</h2>
+      <p class="subtitle" id="compartilhar-texto">Outro dispositivo quer acessar uma pasta deste dispositivo.</p>
+      <div class="compartilhar-aviso" id="compartilhar-aviso">
+        O outro dispositivo poderá <strong>visualizar e baixar</strong> somente os arquivos da pasta que você escolher agora. Nada mais será acessível. Você pode recusar a qualquer momento.
+      </div>
+      <div class="compartilhar-botoes">
+        <button class="secondary-btn" id="btn-recusar-compartilhar" style="color: #ff6b6b; border-color: #ff6b6b;">Recusar</button>
+        <button class="primary-btn" id="btn-selecionar-pasta-compartilhar">Selecionar pasta</button>
+      </div>
+      <button class="secondary-btn" id="btn-enviar-arquivos-agora" style="display: none; width: 100%; margin-top: 10px; border-color: var(--accent); color: var(--accent);">
+        📂 Enviar arquivos selecionados agora
+      </button>
+      <p id="compartilhar-fallback-hint" style="display: none; font-size: 12px; color: #9a9a9a; margin-top: 10px; text-align: left; line-height: 1.5;">
+        Este dispositivo não permite compartilhar uma pasta para navegação. Você pode selecionar arquivos e enviá-los agora — eles chegarão ao outro dispositivo, mas sem navegação remota depois.
+      </p>
+    </div>
+  </div>
+    <!-- NOVO: Modal de Editar Nome -->
+  <div class="modal-overlay" id="modal-editar-nome">
+    <div class="modal-box" style="max-width: 400px;">
+      <h2>Editar nome</h2>
+      <p class="subtitle">Dê um nome para identificar este dispositivo.</p>
+      <input type="text" id="input-editar-nome" maxlength="40" style="width: 100%; background: #121212; color: #fff; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px; margin-bottom: 20px; font-size: 16px; text-align: center; outline: none;">
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button class="secondary-btn" id="btn-cancelar-editar-nome">Cancelar</button>
+        <button class="primary-btn" id="btn-salvar-editar-nome">Salvar</button>
+      </div>
+    </div>
+  </div>
+    <!-- Bloco B / Bug #8: prompt inline quando o modal completo está oculto -->
+  <div id="prompt-recebimento-inline" aria-live="polite">
+    <div class="prompt-titulo" id="prompt-titulo">Receber arquivos?</div>
+    <div class="prompt-detalhe" id="prompt-detalhe">0 arquivos</div>
+    <div class="prompt-acoes">
+      <button class="prompt-recusar" id="btn-prompt-recusar">Recusar</button>
+      <button class="prompt-aceitar" id="btn-prompt-aceitar">Aceitar</button>
+    </div>
+  </div>
+  <button class="btn-tornar-servidor" id="btn-tornar-servidor">Se tornar o dispositivo servidor</button>
+
+  <!-- ══ Bloco C: Modal de aviso ao ATIVAR o modo automático ══ -->
+  <div class="modal-overlay" id="modal-auto-ativar">
+    <div class="modal-box">
+      <h2 style="font-size:18px; margin-bottom:12px;">Ativar Modo Conexão Automática</h2>
+      <p class="modal-subtitle" style="margin-bottom:16px; line-height:1.6;">
+        Ao ativar o Modo Conexão Automática, este aparelho receberá um ID exclusivo.
+        Em outro dispositivo com Physical Cloud, escolha <strong>“Conectar por ID”</strong> e informe esse código para enviar arquivos para cá. Você não precisa estar perto do aparelho nem tê-lo em mãos.
+        <br><br>
+        O dispositivo que recebe precisa estar ligado, conectado à internet e com o modo automático ativo.
+        <br><br>
+        <strong>Atenção:</strong> quem tiver seu ID poderá iniciar uma conexão e enviar arquivos automaticamente, sem precisar de uma nova confirmação a cada envio. Compartilhe o código somente com seus próprios dispositivos ou com pessoas de confiança.
+      </p>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <button class="primary-btn" id="btn-auto-confirmar-ativar">Entendi, ativar</button>
+        <button class="secondary-btn" id="btn-auto-cancelar-ativar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- A isenção de bateria é pedida apenas quando o usuário ativa o modo automático no Android. -->
+  <div class="modal-overlay" id="modal-auto-bateria">
+    <div class="modal-box">
+      <h2 style="font-size:18px; margin-bottom:12px;">Permitir conexão em segundo plano</h2>
+      <p class="modal-subtitle" style="margin-bottom:16px; line-height:1.6;">
+        Para melhorar a continuidade da conexão automática com a tela apagada ou o aplicativo minimizado,
+        permita que o Android ignore a otimização de bateria para o Physical Cloud.
+        <br><br>
+        Essa permissão ajuda a reduzir interrupções, mas não garante funcionamento ininterrupto: alguns fabricantes
+        ainda aplicam restrições próprias.
+      </p>
+      <p id="auto-bateria-status" role="status" aria-live="polite" style="display:none; font-size:13px; line-height:1.5; margin-bottom:14px; color:#f1c66a;"></p>
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <button class="primary-btn" id="btn-auto-bateria-configurar">Abrir configuração do Android</button>
+        <button class="secondary-btn" id="btn-auto-bateria-continuar">Ativar sem configurar</button>
+        <button class="secondary-btn" id="btn-auto-bateria-cancelar">Agora não</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Bloco C: Modal de aviso ao DESATIVAR o modo automático ══ -->
+  <div class="modal-overlay" id="modal-auto-desativar">
+    <div class="modal-box">
+      <h2 style="font-size:18px; margin-bottom:12px;">Desativar Modo Conexão Automática</h2>
+      <p class="modal-subtitle" style="margin-bottom:16px; line-height:1.6;">
+        Desativar irá <strong>invalidar seu ID atual.</strong>
+        Para usar a conexão automática novamente, um novo ID será gerado.
+        <br><br>
+        Dispositivos que tinham o ID antigo não conseguirão mais se conectar.
+      </p>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <button class="primary-btn" style="background:#c0392b; border-color:#c0392b;" id="btn-auto-confirmar-desativar">Desativar e gerar novo ID</button>
+        <button class="secondary-btn" id="btn-auto-cancelar-desativar">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-auto-desativar-transferencia">
+    <div class="modal-box">
+      <h2 style="font-size:18px; margin-bottom:12px;">Transferência em andamento</h2>
+      <p class="modal-subtitle" style="margin-bottom:16px; line-height:1.6;">
+        Há transferências de arquivos em andamento neste dispositivo. Se continuar, todas serão canceladas. Arquivos que ainda não terminaram de ser enviados ou recebidos ficarão incompletos.
+        <br><br>
+        O Modo Conexão Automática também será desativado e seu ID atual será invalidado. Deseja continuar?
+      </p>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <button class="primary-btn" style="background:#c0392b; border-color:#c0392b;" id="btn-auto-confirmar-desativar-transferencia">Cancelar transferências e desativar</button>
+        <button class="secondary-btn" id="btn-auto-cancelar-desativar-transferencia">Manter tudo ativo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Bloco C: Modal de aviso ao gerar NOVO ID ══ -->
+  <div class="modal-overlay" id="modal-auto-novo-id">
+    <div class="modal-box">
+      <h2 style="font-size:18px; margin-bottom:12px;">Gerar novo ID?</h2>
+      <p class="modal-subtitle" style="margin-bottom:16px; line-height:1.6;">
+        Seu ID atual será <strong>invalidado permanentemente.</strong>
+        Você precisará compartilhar o novo ID com todos os dispositivos que usam
+        a conexão automática com este aparelho.
+      </p>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <button class="primary-btn" style="background:#c0392b; border-color:#c0392b;" id="btn-auto-confirmar-novo-id">Gerar novo ID</button>
+        <button class="secondary-btn" id="btn-auto-cancelar-novo-id">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Bloco D: Modal "Conectar por ID" ══ -->
+  <div class="modal-overlay" id="modal-conectar-por-id">
+    <div class="modal-box">
+      <button class="modal-close" id="btn-fechar-conectar-por-id">&times;</button>
+      <h2 style="font-size:18px; margin-bottom:8px;">Conectar por ID</h2>
+      <p class="modal-subtitle" style="margin-bottom:16px;">Digite o ID do dispositivo:</p>
+      <div class="conectar-id-input-wrap">
+        <span class="conectar-id-prefix">PC-</span>
+        <input
+          type="text"
+          id="input-conectar-id"
+          class="conectar-id-input"
+          maxlength="30"
+          placeholder="ID de 27 caracteres"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="characters"
+          spellcheck="false"
+        />
+      </div>
+      <p id="aviso-conectar-id" style="font-size:12px; color:var(--text-muted); margin:12px 0 16px; line-height:1.5;">
+        ℹ Você poderá enviar arquivos sem confirmação individual.
+        Use apenas para seus próprios dispositivos ou com dispositivos de pessoas de confiança.
+      </p>
+      <label style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-muted); margin-bottom:20px; cursor:pointer;">
+        <input type="checkbox" id="conectar-id-nao-mostrar">
+        Não mostrar este aviso novamente
+      </label>
+      <div id="conectar-id-status" style="display:none; font-size:13px; margin-bottom:12px; text-align:center;"></div>
+      <div style="display:flex; gap:12px; justify-content:center;">
+        <button class="primary-btn" id="btn-confirmar-conectar-id">Conectar</button>
+        <button class="secondary-btn" id="btn-cancelar-conectar-id">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <!-- Bridge nativo Android — carregado antes de tudo para interceptar APIs web -->
+  <script src="android-bridge.js"></script>
+  <script src="PhysicalCloud.js"></script>
+  <script src="PhysicalCloud-webrtc.js"></script>
+  <script src="PhysicalCloud-transfer.js"></script>
+  <script src="PhysicalCloud-feedback.js"></script>
+  <script src="PhysicalCloud-auto.js"></script>
+  <script>
+    // ═════════════════════════════════════════════════════════════════════
+    // PHYSICAL CLOUD — UI ORQUESTRADOR (FASE 1)
+    // ═════════════════════════════════════════════════════════════════════
+
+    const $ = (id) => document.getElementById(id);
+
+    // ─── Sidebar mobile ───
+    const sidebar = $("sidebar");
+    const sidebarOverlay = $("sidebar-overlay");
+    $("sidebar-toggle")?.addEventListener("click", () => {
+      sidebar?.classList.toggle("open");
+      sidebarOverlay?.classList.toggle("active");
+    });
+    sidebarOverlay?.addEventListener("click", () => {
+      sidebar?.classList.remove("open");
+      sidebarOverlay?.classList.remove("active");
+    });
+
+    // ─── Abas ───
+    document.querySelectorAll(".nav-item[data-tab]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const alvo = btn.dataset.tab;
+        if (!alvo) return;
+        document.querySelectorAll(".nav-item[data-tab]").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".tab-panel").forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(alvo)?.classList.add("active");
+        if (window.innerWidth <= 768) {
+          sidebar?.classList.remove("open");
+          sidebarOverlay?.classList.remove("active");
+        }
+      });
+    });
+    $("btn-ir-dispositivos")?.addEventListener("click", () => {
+      document.querySelector('.nav-item[data-tab="dispositivos"]')?.click();
+    });
+
+    // ─── Helpers ───
+    function obterSessoes() {
+      return window.PhysicalCloud?.sessoes || new Map();
+    }
+
+    function formatarTamanho(bytes) {
+      if (!Number.isFinite(bytes) || bytes <= 0) return "0 B";
+      if (bytes < 1024) return bytes + " B";
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+      if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+      return (bytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+    }
+
+    function formatarEta(segundos) {
+      if (!Number.isFinite(segundos) || segundos <= 0) return "—";
+      if (segundos < 60) return Math.ceil(segundos) + "s";
+      if (segundos < 3600) return Math.floor(segundos / 60) + "m " + Math.ceil(segundos % 60) + "s";
+      return Math.floor(segundos / 3600) + "h " + Math.ceil((segundos % 3600) / 60) + "m";
+    }
+
+    function ehAndroid() {
+      return /Android/i.test(navigator.userAgent);
+    }
+
+    function obterSessaoAlvo(sessaoIdPreferida) {
+      if (sessaoIdPreferida) return sessaoIdPreferida;
+      const select = $("destino-select");
+      if (select && select.value) return select.value;
+      const canais = window.PhysicalCloudTransfer?.canais;
+      if (canais && canais.size === 1) return Array.from(canais.keys())[0];
+      return null;
+    }
+        function temDirectoryPicker() {
+      return typeof window.showDirectoryPicker === "function";
+    }
+
+    // ─── Bloco B: IndexedDB para o handle da pasta padrão ───
+    const DB_HANDLES_NOME = "physicalcloud-handles";
+    const DB_HANDLES_VERSION = 1;
+    const STORE_HANDLES = "handles";
+
+    function abrirDBHandles() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_HANDLES_NOME, DB_HANDLES_VERSION);
+        req.onupgradeneeded = () => {
+          const db = req.result;
+          if (!db.objectStoreNames.contains(STORE_HANDLES)) {
+            db.createObjectStore(STORE_HANDLES, { keyPath: "id" });
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function salvarDestinoPadrao(handle) {
+      try {
+        const db = await abrirDBHandles();
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_HANDLES, "readwrite");
+          const store = tx.objectStore(STORE_HANDLES);
+          const req = store.put({ id: "destinoPadrao", handle, salvoEm: Date.now() });
+          req.onsuccess = () => resolve();
+          req.onerror = () => reject(req.error);
+        });
+      } catch (e) {
+        console.warn("Não foi possível salvar destino padrão:", e);
+      }
+    }
+
+    async function obterDestinoPadrao() {
+      try {
+        const db = await abrirDBHandles();
+        return await new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_HANDLES, "readonly");
+          const store = tx.objectStore(STORE_HANDLES);
+          const req = store.get("destinoPadrao");
+          req.onsuccess = () => resolve(req.result && req.result.handle ? req.result.handle : null);
+          req.onerror = () => reject(req.error);
+        });
+      } catch (e) {
+        console.warn("Não foi possível ler destino padrão:", e);
+        return null;
+      }
+    }
+
+    async function limparDestinoPadrao() {
+      try {
+        const db = await abrirDBHandles();
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_HANDLES, "readwrite");
+          const store = tx.objectStore(STORE_HANDLES);
+          const req = store.delete("destinoPadrao");
+          req.onsuccess = () => resolve();
+          req.onerror = () => reject(req.error);
+        });
+      } catch (e) {
+        console.warn("Não foi possível limpar destino padrão:", e);
+      }
+    }
+
+    async function permissaoHandle(handle) {
+      try {
+        if (!handle || typeof handle.queryPermission !== "function") return "granted";
+        return await handle.queryPermission({ mode: "readwrite" });
+      } catch {
+        return "denied";
+      }
+    }
+        // ─── Bloco B: migration da chave antiga de "não mostrar" ───
+    (function migrarChaveRecebimento() {
+      try {
+        const antiga = localStorage.getItem("physicalCloudNaoMostrarRecebimento");
+        if (antiga !== null) {
+          localStorage.setItem("physicalCloudOcultarModalRecebimento", antiga);
+          localStorage.removeItem("physicalCloudNaoMostrarRecebimento");
+        }
+      } catch { /* storage indisponível */ }
+    })();
+
+    // ─── Estado da nuvem ───
+    function atualizarEstadoNuvem() {
+      const canais = window.PhysicalCloudTransfer?.canais;
+      const temCanal = !!(canais && canais.size > 0);
+      $("nuvem-sem-canal").style.display = temCanal ? "none" : "";
+      $("nuvem-com-canal").style.display = temCanal ? "" : "none";
+
+      const select = $("destino-select");
+      const container = $("destino-container");
+      if (!select || !container) return;
+      const sessoes = obterSessoes();
+      if (!temCanal || sessoes.size === 0) { container.style.display = "none"; return; }
+      container.style.display = sessoes.size > 1 ? "" : "none";
+      const valorAnterior = select.value;
+      select.innerHTML = "";
+      for (const [sid, s] of sessoes) {
+        const opt = document.createElement("option");
+        opt.value = sid;
+        opt.textContent = s.nome || "Dispositivo";
+        select.appendChild(opt);
+      }
+      if (valorAnterior && sessoes.has(valorAnterior)) select.value = valorAnterior;
+    }
+
+    function atualizarBotoesExplorador() {
+      const sessoes = obterSessoes();
+      let souServidor = false, souCliente = false;
+      for (const [, s] of sessoes) {
+        if (s.papel === "servidor") souServidor = true;
+        if (s.papel === "cliente") souCliente = true;
+      }
+      const btnCompartilhar = $("btn-compartilhar-pasta");
+      const btnExplorar = $("btn-explorar-servidor");
+      if (btnCompartilhar) btnCompartilhar.style.display = souServidor ? "" : "none";
+      if (btnExplorar) btnExplorar.style.display = souCliente ? "" : "none";
+    }
+
+    window.addEventListener("physicalcloud:canal-aberto", () => { atualizarEstadoNuvem(); atualizarBotoesExplorador(); });
+    window.addEventListener("physicalcloud:sessao-ativa", () => { atualizarEstadoNuvem(); atualizarBotoesExplorador(); });
+    window.addEventListener("physicalcloud:sessao-encerrada", () => { atualizarEstadoNuvem(); atualizarBotoesExplorador(); });
+    window.addEventListener("physicalcloud:sessao-pronta-para-ui", () => { atualizarEstadoNuvem(); atualizarBotoesExplorador(); });
+    window.addEventListener("physicalcloud:transfer-sem-canal", () => {
+      window.PhysicalCloud?.aviso?.("Nenhum dispositivo conectado.");
+    });
+
+    // ─── Aviso >100 arquivos ───
+    function confirmarLoteSeNecessario(total) {
+      if (total <= 100) return Promise.resolve();
+      if (localStorage.getItem("physicalCloudNaoMostrarAvisoLote") === "true") return Promise.resolve();
+      return new Promise((resolve) => {
+        const modal = $("modal-lote");
+        $("lote-total").textContent = `Você selecionou ${total} arquivos.`;
+        const chk = $("nao-mostrar-lote");
+        chk.checked = false;
+        const fechar = () => {
+          if (chk.checked) localStorage.setItem("physicalCloudNaoMostrarAvisoLote", "true");
+          modal.classList.remove("active");
+          const btn = $("btn-ok-lote");
+          if (btn) btn.onclick = null;
+          resolve();
+        };
+        $("btn-ok-lote").onclick = fechar;
+        modal.classList.add("active");
+      });
+    }
+
+    // ─── Envio de arquivos ───
+    async function iniciarEnvioArquivos(arquivos, sessaoIdPreferida) {
+      if (!arquivos || arquivos.length === 0) return;
+      await confirmarLoteSeNecessario(arquivos.length);
+      const sessaoId = obterSessaoAlvo(sessaoIdPreferida);
+      if (!sessaoId) { window.PhysicalCloud?.aviso?.("Selecione um dispositivo de destino."); return; }
+      window.PhysicalCloudTransfer.enfileirarArquivos(sessaoId, arquivos);
+    }
+
+    $("btn-enviar")?.addEventListener("click", () => {
+      const input = document.createElement("input");
+      input.type = "file"; input.multiple = true; input.style.display = "none";
+      document.body.appendChild(input);
+      const limpar = () => { if (input.parentNode) document.body.removeChild(input); };
+      input.addEventListener("cancel", limpar);
+      input.addEventListener("change", () => {
+        const arquivos = Array.from(input.files || []);
+        limpar();
+        iniciarEnvioArquivos(arquivos);
+      });
+      input.click();
+    });
+
+    $("btn-enviar-pasta")?.addEventListener("click", async () => {
+      if (window.isAndroidApp && typeof window.androidPickFolderFiles === "function") {
+        try {
+          const arquivos = await window.androidPickFolderFiles();
+          if (!arquivos.length) { window.PhysicalCloud?.aviso?.("A pasta selecionada não contém arquivos."); return; }
+          iniciarEnvioArquivos(arquivos);
+        } catch (e) {
+          if (e?.name !== "AbortError") window.PhysicalCloud?.aviso?.(e?.message || "Não foi possível ler a pasta selecionada.");
+        }
+        return;
+      }
+      const input = document.createElement("input");
+      input.type = "file"; input.webkitdirectory = true; input.multiple = true; input.style.display = "none";
+      document.body.appendChild(input);
+      const limpar = () => { if (input.parentNode) document.body.removeChild(input); };
+      input.addEventListener("cancel", limpar);
+      input.addEventListener("change", () => {
+        const arquivos = Array.from(input.files || []);
+        limpar();
+        iniciarEnvioArquivos(arquivos);
+      });
+      input.click();
+    });
+
+       // Bloco D / Bug #1: mensagem neutra sobre blob, sem citar pasta nem
+    // gerenciador. O destino depende do sistema operacional e das
+    // configurações de download do usuário.
+    window.addEventListener("physicalcloud:modo-salvamento-blob", (ev) => {
+      const { totalArquivos } = ev.detail || {};
+      const msg = totalArquivos === 1
+        ? "Salvando 1 arquivo pelo navegador."
+        : `Salvando ${totalArquivos} arquivos pelo navegador.`;
+      window.PhysicalCloud?.aviso?.(msg);
+    });
+
+    // Bloco D / Bug #1: falha de download (raro, mas honesto reportar).
+    window.addEventListener("physicalcloud:download-falhou", (ev) => {
+      const { motivo, nome } = ev.detail || {};
+      const prefixo = nome ? `[${nome}] ` : "";
+      window.PhysicalCloud?.aviso?.(
+        prefixo + (motivo || "Não foi possível salvar o arquivo. Verifique as configurações de download do navegador.")
+      );
+    });
+//<!-- ═══ FIM DA PARTE 1/3 ═══ -->
+    // ═══ INÍCIO DA PARTE 2/3 ═══
+
+    // ─── Explorador remoto ───
+    // FASE 1 / Bugs #5 e #8:
+    //  - iniciarExploracaoRemota agora recebe qual é o MEU papel na sessão
+    //    que quero explorar, e escolhe a sessão certa em vez de "primeira
+    //    com papel X".
+    //  - Se houver múltiplas sessões do mesmo papel, usa o valor do
+    //    <select id="destino-select"> quando ele bater.
+    //  - O controle de auto-aceite de pull agora vive no transfer.js
+    //    (marcarPullAguardando/consumirPullAguardando), então esta UI
+    //    só dispara o evento — sem Map local.
+    const estadoExplorador = {
+      sessaoId: null,
+      caminho: "",
+      pagina: 1,
+      totalPaginas: 1,
+      carregando: false,
+    };
+
+    function resetarExplorador() {
+      estadoExplorador.sessaoId = null;
+      estadoExplorador.caminho = "";
+      estadoExplorador.pagina = 1;
+      estadoExplorador.totalPaginas = 1;
+      estadoExplorador.carregando = false;
+      $("lista-explorador").innerHTML = "";
+      $("explorador-caminho").textContent = "Raiz";
+      $("explorador-status").textContent = "Aguardando autorização do dispositivo remoto...";
+      $("explorador-paginacao").style.display = "none";
+      $("btn-explorador-voltar").style.display = "none";
+    }
+
+    /**
+     * @param {"servidor" | "cliente"} meuPapel
+     *   "servidor" = eu sou servidor nesta sessão; quero explorar o cliente
+     *   "cliente"  = eu sou cliente nesta sessão; quero explorar o servidor
+     */
+    function iniciarExploracaoRemota(meuPapel) {
+      resetarExplorador();
+      $("modal-explorador").classList.add("active");
+
+      const sessoes = obterSessoes();
+      /** @type {Array<{ sid: string, s: any }>} */
+      const candidatas = [];
+      for (const [sid, s] of sessoes) {
+        if (s.papel === meuPapel) candidatas.push({ sid, s });
+      }
+
+      if (candidatas.length === 0) {
+        $("explorador-status").textContent =
+          meuPapel === "cliente"
+            ? "Nenhum dispositivo servidor conectado."
+            : "Nenhum dispositivo cliente conectado.";
+        return;
+      }
+
+      let sessaoId;
+      if (candidatas.length === 1) {
+        sessaoId = candidatas[0].sid;
+      } else {
+        const alvoSelect = $("destino-select")?.value;
+        if (alvoSelect && candidatas.some(c => c.sid === alvoSelect)) {
+          sessaoId = alvoSelect;
+        } else {
+          sessaoId = candidatas[0].sid;
+        }
+      }
+
+      estadoExplorador.sessaoId = sessaoId;
+
+      const ok = window.PhysicalCloudTransfer.solicitarCompartilhamentoRemoto(sessaoId);
+      if (!ok) {
+        $("explorador-status").textContent = "Sessão indisponível.";
+        return;
+      }
+      $("explorador-status").textContent = "Aguardando autorização do outro dispositivo...";
+    }
+
+    // FASE 1 / Bug #8: cada botão passa explicitamente o MEU papel.
+    //  - "btn-compartilhar-pasta" (sou servidor) → exploro o cliente
+    //  - "btn-explorar-servidor" (sou cliente) → exploro o servidor
+    $("btn-compartilhar-pasta")?.addEventListener("click", () => iniciarExploracaoRemota("servidor"));
+    $("btn-explorar-servidor")?.addEventListener("click", () => iniciarExploracaoRemota("cliente"));
+
+    $("btn-fechar-explorador")?.addEventListener("click", () => {
+      $("modal-explorador").classList.remove("active");
+    });
+
+    $("btn-explorador-voltar")?.addEventListener("click", () => {
+      if (!estadoExplorador.sessaoId) return;
+      const partes = estadoExplorador.caminho.split("/").filter(Boolean);
+      partes.pop();
+      estadoExplorador.caminho = partes.join("/");
+      estadoExplorador.pagina = 1;
+      solicitarListagemRemota();
+    });
+
+    $("btn-pagina-anterior")?.addEventListener("click", () => {
+      if (estadoExplorador.pagina <= 1 || estadoExplorador.carregando) return;
+      estadoExplorador.pagina--;
+      solicitarListagemRemota();
+    });
+
+    $("btn-pagina-proxima")?.addEventListener("click", () => {
+      if (estadoExplorador.pagina >= estadoExplorador.totalPaginas || estadoExplorador.carregando) return;
+      estadoExplorador.pagina++;
+      solicitarListagemRemota();
+    });
+
+    function solicitarListagemRemota() {
+      if (!estadoExplorador.sessaoId) return;
+      estadoExplorador.carregando = true;
+      $("explorador-status").textContent = "Carregando...";
+      window.dispatchEvent(new CustomEvent("physicalcloud:solicitar-exploracao", {
+        detail: {
+          sessaoId: estadoExplorador.sessaoId,
+          caminho: estadoExplorador.caminho,
+          pagina: estadoExplorador.pagina,
+        },
+      }));
+    }
+
+    // Resultado da autorização de compartilhamento remoto
+    window.addEventListener("physicalcloud:share-folder-resultado", (ev) => {
+      const { sessaoId, sucesso, erro } = ev.detail;
+      if (sessaoId !== estadoExplorador.sessaoId) return;
+      if (!sucesso) {
+        $("explorador-status").textContent = erro || "Compartilhamento recusado pelo outro dispositivo.";
+        return;
+      }
+      estadoExplorador.caminho = "";
+      estadoExplorador.pagina = 1;
+      solicitarListagemRemota();
+    });
+
+    // Aviso quando EU sou solicitado a compartilhar uma pasta
+        // Bloco B / Bug #3: abre modal de confirmação em vez de abrir o picker
+    // automaticamente. O picker só é aberto depois do clique do usuário.
+    let sessaoCompartilharAtual = null;
+
+    window.addEventListener("physicalcloud:share-folder-solicitado", (ev) => {
+      const { sessaoId } = ev.detail;
+      const sessoes = obterSessoes();
+      const s = sessoes.get(sessaoId);
+      const nome = (s && s.nome) ? s.nome : "O outro dispositivo";
+
+      sessaoCompartilharAtual = sessaoId;
+      $("compartilhar-texto").textContent = `"${nome}" quer acessar uma pasta deste dispositivo.`;
+
+      const btnSelecionar = $("btn-selecionar-pasta-compartilhar");
+      const btnEnviarAgora = $("btn-enviar-arquivos-agora");
+      const hint = $("compartilhar-fallback-hint");
+
+      if (temDirectoryPicker()) {
+        if (btnSelecionar) btnSelecionar.style.display = "";
+        if (btnEnviarAgora) btnEnviarAgora.style.display = "none";
+        if (hint) hint.style.display = "none";
+      } else {
+        if (btnSelecionar) btnSelecionar.style.display = "none";
+        if (btnEnviarAgora) btnEnviarAgora.style.display = "";
+        if (hint) hint.style.display = "";
+      }
+
+      $("modal-compartilhar-pasta").classList.add("active");
+    });
+        function fecharModalCompartilhar() {
+      sessaoCompartilharAtual = null;
+      $("modal-compartilhar-pasta").classList.remove("active");
+    }
+
+    $("btn-selecionar-pasta-compartilhar")?.addEventListener("click", async () => {
+      const sessaoId = sessaoCompartilharAtual;
+      fecharModalCompartilhar();
+      if (!sessaoId) return;
+      try {
+        const resultado = await window.PhysicalCloudTransfer.selecionarPastaParaCompartilhar(sessaoId);
+        if (resultado && resultado.sucesso) {
+          window.PhysicalCloud?.aviso?.("Pasta compartilhada. O outro dispositivo já pode explorar.");
+        } else if (resultado && resultado.erro && resultado.erro !== "cancelado") {
+          window.PhysicalCloud?.aviso?.("Não foi possível compartilhar: " + resultado.erro);
+        }
+      } catch (e) {
+        console.error("Falha ao compartilhar pasta:", e);
+        window.PhysicalCloud?.aviso?.("Erro ao compartilhar pasta.");
+      }
+    });
+
+    $("btn-recusar-compartilhar")?.addEventListener("click", () => {
+      const sessaoId = sessaoCompartilharAtual;
+      fecharModalCompartilhar();
+      if (!sessaoId) return;
+      window.PhysicalCloudTransfer.recusarCompartilhamentoRemoto(sessaoId, "Recusado pelo usuário.");
+      window.PhysicalCloud?.aviso?.("Compartilhamento recusado.");
+    });
+
+    // Fallback Android: envia arquivos selecionados sem explorador navegável
+    $("btn-enviar-arquivos-agora")?.addEventListener("click", async () => {
+      const sessaoId = sessaoCompartilharAtual;
+      fecharModalCompartilhar();
+      if (!sessaoId) return;
+
+      if (window.isAndroidApp && typeof window.androidPickFolderFiles === "function") {
+        try {
+          const arquivos = await window.androidPickFolderFiles();
+          if (!arquivos.length) { window.PhysicalCloud?.aviso?.("A pasta selecionada não contém arquivos."); return; }
+          window.PhysicalCloudTransfer.compartilharArquivosSelecionados(sessaoId, arquivos);
+          window.PhysicalCloud?.aviso?.(`Enviando ${arquivos.length} arquivo(s) para o outro dispositivo.`);
+        } catch (e) {
+          if (e?.name !== "AbortError") window.PhysicalCloud?.aviso?.(e?.message || "Não foi possível ler a pasta selecionada.");
+        }
+        return;
+      }
+
+      const input = document.createElement("input");
+      input.type = "file";
+      input.webkitdirectory = true;
+      input.multiple = true;
+      input.style.display = "none";
+      document.body.appendChild(input);
+      const limpar = () => { if (input.parentNode) document.body.removeChild(input); };
+      input.addEventListener("cancel", limpar);
+      input.addEventListener("change", () => {
+        const arquivos = Array.from(input.files || []);
+        limpar();
+        if (arquivos.length === 0) return;
+        window.PhysicalCloudTransfer.compartilharArquivosSelecionados(sessaoId, arquivos);
+        window.PhysicalCloud?.aviso?.(
+          `Enviando ${arquivos.length} arquivo(s) para o outro dispositivo.`
+        );
+      });
+      input.click();
+    });
+
+    // Renderização da listagem recebida
+    window.addEventListener("physicalcloud:lista-recebida", (ev) => {
+      if (!estadoExplorador.sessaoId) return;
+      const { itens, caminho, pagina, totalPaginas, totalItens, erro } = ev.detail;
+      estadoExplorador.carregando = false;
+
+      if (erro) {
+        $("explorador-status").textContent = erro;
+        $("lista-explorador").innerHTML = "";
+        $("explorador-paginacao").style.display = "none";
+        return;
+      }
+
+      estadoExplorador.pagina = pagina || 1;
+      estadoExplorador.totalPaginas = totalPaginas || 1;
+      estadoExplorador.caminho = caminho || "";
+
+      $("explorador-caminho").textContent = caminho ? "/" + caminho : "Raiz";
+      $("btn-explorador-voltar").style.display = caminho ? "" : "none";
+
+      const lista = $("lista-explorador");
+      lista.innerHTML = "";
+
+      if (!itens || itens.length === 0) {
+        $("explorador-status").textContent = "Pasta vazia.";
+        $("explorador-paginacao").style.display = "none";
+        return;
+      }
+
+      $("explorador-status").textContent =
+        `${totalItens || itens.length} item(s) — página ${pagina}/${totalPaginas}`;
+
+      for (const item of itens) {
+        const linha = document.createElement("div");
+        linha.className = "explorer-item";
+
+        const icone = document.createElement("span");
+        icone.className = "explorer-icon";
+        icone.textContent = item.tipo === "directory" ? "📁" : "📄";
+
+        const info = document.createElement("div");
+        info.className = "explorer-info";
+        const nome = document.createElement("span");
+        nome.className = "explorer-name";
+        nome.textContent = item.nome;
+        info.appendChild(nome);
+
+        if (item.tipo === "file") {
+          const det = document.createElement("span");
+          det.className = "explorer-details";
+          det.textContent = formatarTamanho(item.tamanho);
+          info.appendChild(det);
+        }
+
+        const btnBaixar = document.createElement("button");
+        btnBaixar.className = "secondary-btn";
+        btnBaixar.style.padding = "4px 10px";
+        btnBaixar.style.fontSize = "12px";
+        btnBaixar.textContent = item.tipo === "directory" ? "⬇ Pasta" : "⬇";
+        btnBaixar.addEventListener("click", (evClick) => {
+          evClick.stopPropagation();
+          solicitarDownloadRemoto(item.caminho, item.tipo);
+        });
+
+        linha.append(icone, info, btnBaixar);
+
+        linha.addEventListener("click", () => {
+          if (item.tipo === "directory") {
+            estadoExplorador.caminho = item.caminho;
+            estadoExplorador.pagina = 1;
+            solicitarListagemRemota();
+          } else {
+            solicitarDownloadRemoto(item.caminho, "file");
+          }
+        });
+
+        lista.appendChild(linha);
+      }
+
+      // FASE 1 / Bug #13: `display` só via JS, sem conflito inline
+      const paginacao = $("explorador-paginacao");
+      if (totalPaginas > 1) {
+        paginacao.style.display = "flex";
+        $("explorador-pagina-texto").textContent = `Página ${pagina} / ${totalPaginas}`;
+        $("btn-pagina-anterior").disabled = pagina <= 1;
+        $("btn-pagina-proxima").disabled = pagina >= totalPaginas;
+      } else {
+        paginacao.style.display = "none";
+      }
+    });
+
+    /**
+     * FASE 1: solicitarDownloadRemoto NÃO mantém mais pullsAguardando local.
+     * O transfer.js registra marcarPullAguardando antes de enviar e o
+     * receptor só auto-aceita se o operacaoId bater exatamente.
+     */
+    function solicitarDownloadRemoto(caminho, tipoCaminho) {
+      if (!estadoExplorador.sessaoId) return;
+      window.dispatchEvent(new CustomEvent("physicalcloud:solicitar-download-remoto", {
+        detail: {
+          sessaoId: estadoExplorador.sessaoId,
+          caminho,
+          tipoCaminho,
+        },
+      }));
+      window.PhysicalCloud?.aviso?.(`Solicitando ${caminho}…`);
+    }
+
+    // ═══ FIM DA PARTE 2/3 ═══
+        // ═══ INÍCIO DA PARTE 3/3 ═══
+
+    // ─── Modal de recebimento (operação inteira) ───
+    let operacaoAtualId = null;
+
+      // Bloco B / Bug #8: preferências separadas.
+    // - physicalCloudOcultarModalRecebimento → só controla exibição do modal
+    // - destinoPadrao (IndexedDB) → pasta salva para auto-aceite
+    // Nunca um afeta o outro.
+       // ═════════════════════════════════════════════════════════════════════
+    // Bloco C / Bug #5: fila de recebimentos na UI.
+    // ═════════════════════════════════════════════════════════════════════
+    const filaModaisRecebimento = [];
+    let modalRecebimentoAberto = false;
+    let promptInlineAtual = null;
+    // (operacaoAtualId NÃO é re-declarado — já existe acima, da Fase 1)
+
+    function atualizarIndicadorFila() {
+      let el = $("recebimento-indicador-fila");
+      const nomeEl = $("recebimento-nome");
+      if (!nomeEl) return;
+      const pendentes = filaModaisRecebimento.length;
+      if (pendentes <= 1) {
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+        return;
+      }
+      if (!el) {
+        el = document.createElement("div");
+        el.id = "recebimento-indicador-fila";
+        el.style.cssText =
+          "font-size: 11px; color: #ffd280; margin-top: 8px; font-weight: 500;";
+        nomeEl.parentNode.appendChild(el);
+      }
+      el.textContent = `${pendentes} solicitações aguardando — exibindo a primeira.`;
+    }
+
+    function esconderPromptInline() {
+      promptInlineAtual = null;
+      $("prompt-recebimento-inline").classList.remove("ativo");
+    }
+
+    function abrirProximoRecebimento() {
+      if (modalRecebimentoAberto) return;
+      if (promptInlineAtual) return;
+
+      if (filaModaisRecebimento.length === 0) {
+        // Nada pendente — limpa estado
+        $("modal-recebimento").classList.remove("active");
+        esconderPromptInline();
+        return;
+      }
+
+      const item = filaModaisRecebimento[0];
+
+      if (item.ocultar) {
+        abrirPromptInline(item);
+      } else {
+        abrirModalCompleto(item);
+      }
+    }
+
+    function abrirModalCompleto(item) {
+      modalRecebimentoAberto = true;
+      operacaoAtualId = item.operacaoId;
+
+      $("recebimento-texto").textContent = `"${item.nomeRemetente}" quer enviar arquivos para este dispositivo.`;
+      $("recebimento-nome").textContent =
+        `Receber ${item.totalArquivos} arquivo${item.totalArquivos === 1 ? "" : "s"}`;
+      $("recebimento-tamanho").textContent = `${formatarTamanho(item.totalBytes)} no total`;
+
+      const lotesEl = $("recebimento-lotes");
+      if (item.totalArquivos > 100) {
+        const lotes = item.totalLotes || Math.ceil(item.totalArquivos / 100);
+        lotesEl.style.display = "";
+        lotesEl.textContent =
+          `⚠️ Será dividido em ${lotes} lotes de até 100 arquivos. O processamento entre lotes é automático.`;
+      } else {
+        lotesEl.style.display = "none";
+      }
+
+      const chkOcultar = $("nao-mostrar-recebimento");
+      const chkSalvar = $("salvar-sempre-nesta-pasta");
+      const hintSalvar = $("hint-salvar-sempre");
+      const labelSalvar = $("label-salvar-sempre");
+      if (chkOcultar) chkOcultar.checked = false;
+      if (chkSalvar) chkSalvar.checked = false;
+      if (hintSalvar) hintSalvar.style.display = "none";
+
+      if (labelSalvar && chkSalvar) {
+        if (!temDirectoryPicker()) {
+          labelSalvar.classList.add("disabled");
+          chkSalvar.disabled = true;
+        } else {
+          labelSalvar.classList.remove("disabled");
+          chkSalvar.disabled = false;
+        }
+      }
+
+      atualizarIndicadorFila();
+      $("modal-recebimento").classList.add("active");
+    }
+
+    function abrirPromptInline(item) {
+      promptInlineAtual = item;
+      $("prompt-titulo").textContent = "Receber arquivos?";
+      const arqTxt = `${item.totalArquivos} arquivo${item.totalArquivos === 1 ? "" : "s"}`;
+      const extra = filaModaisRecebimento.length > 1
+        ? ` (${filaModaisRecebimento.length} na fila)`
+        : "";
+      $("prompt-detalhe").textContent =
+        `${arqTxt} · ${formatarTamanho(item.totalBytes)}${extra}`;
+      $("prompt-recebimento-inline").classList.add("ativo");
+    }
+
+    function concluirPrimeiroDaFila() {
+      filaModaisRecebimento.shift();
+    }
+
+    // ─── Handler principal: cada operação entra na fila ───
+    window.addEventListener("physicalcloud:operacao-recebida", async (ev) => {
+      const { operacaoId, nomeRemetente, totalArquivos, totalBytes, totalLotes } = ev.detail;
+
+      // ── Modo Conexão Automática: aceita direto, zero diálogo ──────────────
+      // O dispositivo já foi pareado pelo usuário via ID; nenhuma confirmação
+      // adicional faz sentido. No Android o arquivo vai para Downloads.
+      if (window.PhysicalCloudAuto?.modoEstaAtivo?.()) {
+        window.PhysicalCloudTransfer.aceitarOperacaoAutomatica(operacaoId)
+          .catch((e) => console.error("[AutoMode] Falha ao auto-aceitar operação:", e));
+        return;
+      }
+
+      const ocultarModal = localStorage.getItem("physicalCloudOcultarModalRecebimento") === "true";
+
+      if (ocultarModal) {
+        // Tenta auto-aceite com pasta padrão salva
+        const handle = await obterDestinoPadrao();
+        if (handle) {
+          const perm = await permissaoHandle(handle);
+          if (perm === "granted") {
+            window.PhysicalCloudTransfer.aceitarOperacaoComHandle(operacaoId, handle)
+              .catch((e) => console.error("Falha ao auto-aceitar com destino padrão:", e));
+            return;
+          }
+          if (perm === "denied") {
+            await limparDestinoPadrao();
+          }
+          // perm === "prompt" → cai no prompt inline
+        }
+        filaModaisRecebimento.push({
+          operacaoId, nomeRemetente, totalArquivos, totalBytes, totalLotes, ocultar: true,
+        });
+        abrirProximoRecebimento();
+        return;
+      }
+
+      filaModaisRecebimento.push({
+        operacaoId, nomeRemetente, totalArquivos, totalBytes, totalLotes, ocultar: false,
+      });
+      abrirProximoRecebimento();
+    });
+
+    // ─── Aceitar / Recusar no modal completo ───
+    $("btn-aceitar-recebimento")?.addEventListener("click", async () => {
+      const opId = operacaoAtualId;
+      if (!opId) return;
+
+      const chkSalvar = $("salvar-sempre-nesta-pasta");
+      const chkOcultar = $("nao-mostrar-recebimento");
+      const salvarSempre = !!(chkSalvar && chkSalvar.checked && !chkSalvar.disabled);
+      const ocultar = !!(chkOcultar && chkOcultar.checked);
+
+      try {
+        if (ocultar) localStorage.setItem("physicalCloudOcultarModalRecebimento", "true");
+        else localStorage.removeItem("physicalCloudOcultarModalRecebimento");
+      } catch { /* storage indisponível */ }
+
+      let handleParaSalvar = null;
+      if (salvarSempre && temDirectoryPicker()) {
+        try {
+          handleParaSalvar = await window.showDirectoryPicker({ mode: "readwrite" });
+        } catch (e) {
+          if (e && e.name === "AbortError") {
+            window.PhysicalCloud?.aviso?.(
+              "Seleção cancelada. Desmarque 'Salvar sempre' para usar o fluxo padrão, ou clique em Recusar."
+            );
+            return;
+          }
+          handleParaSalvar = null;
+        }
+      }
+
+      // Fecha este e avança na fila (antes de processar a aceitação async)
+      modalRecebimentoAberto = false;
+      operacaoAtualId = null;
+      $("modal-recebimento").classList.remove("active");
+      concluirPrimeiroDaFila();
+      abrirProximoRecebimento();
+
+      try {
+        if (handleParaSalvar) {
+          await salvarDestinoPadrao(handleParaSalvar);
+          await window.PhysicalCloudTransfer.aceitarOperacaoComHandle(opId, handleParaSalvar);
+        } else {
+          await window.PhysicalCloudTransfer.aceitarOperacao(opId);
+        }
+      } catch (e) {
+        console.error("Falha ao aceitar operação:", e);
+      }
+    });
+
+    $("btn-recusar-recebimento")?.addEventListener("click", () => {
+      const opId = operacaoAtualId;
+      modalRecebimentoAberto = false;
+      operacaoAtualId = null;
+      $("modal-recebimento").classList.remove("active");
+      concluirPrimeiroDaFila();
+      abrirProximoRecebimento();
+      if (opId) window.PhysicalCloudTransfer.recusarOperacao(opId);
+    });
+
+    // ─── Aceitar / Recusar no prompt inline ───
+    $("btn-prompt-aceitar")?.addEventListener("click", async () => {
+      const item = promptInlineAtual;
+      esconderPromptInline();
+      concluirPrimeiroDaFila();
+      abrirProximoRecebimento();
+      if (!item) return;
+      try {
+        await window.PhysicalCloudTransfer.aceitarOperacao(item.operacaoId);
+      } catch (e) {
+        console.error("Falha ao aceitar via prompt inline:", e);
+      }
+    });
+
+    $("btn-prompt-recusar")?.addEventListener("click", () => {
+      const item = promptInlineAtual;
+      esconderPromptInline();
+      concluirPrimeiroDaFila();
+      abrirProximoRecebimento();
+      if (item) window.PhysicalCloudTransfer.recusarOperacao(item.operacaoId);
+    });
+
+    // ─── Hint do "Salvar sempre" quando o checkbox muda ───
+    $("salvar-sempre-nesta-pasta")?.addEventListener("change", (ev) => {
+      const hint = $("hint-salvar-sempre");
+      if (!hint) return;
+      hint.style.display = ev.target.checked ? "" : "none";
+    });
+
+    $("btn-recusar-recebimento")?.addEventListener("click", () => {
+      const opId = operacaoAtualId;
+      operacaoAtualId = null;
+      $("modal-recebimento").classList.remove("active");
+      if (!opId) return;
+      window.PhysicalCloudTransfer.recusarOperacao(opId);
+    });
+
+    // ─── Cartões de operação em andamento ───
+    const operacoesUI = new Map();
+
+    function criarCartaoOperacao(operacaoId, direcao, totalArquivos, sessaoId) {
+      if (operacoesUI.has(operacaoId)) return;
+      const card = document.createElement("div");
+      card.className = "transfer-card";
+      card.dataset.operacaoId = operacaoId;
+
+      const header = document.createElement("div");
+      header.className = "transfer-header";
+      const icone = document.createElement("span");
+      icone.className = "transfer-icone";
+      icone.textContent = direcao === "envio" ? "⬆" : "⬇";
+      const nome = document.createElement("span");
+      nome.className = "transfer-nome";
+      nome.textContent =
+        (direcao === "envio" ? "Enviando " : "Recebendo ") +
+        `${totalArquivos} arquivo${totalArquivos === 1 ? "" : "s"}`;
+      const tamanho = document.createElement("span");
+      tamanho.className = "transfer-tamanho";
+      const cancelar = document.createElement("button");
+      cancelar.className = "transfer-cancelar";
+      cancelar.textContent = "×";
+      cancelar.title = "Cancelar operação";
+      cancelar.addEventListener("click", () => {
+        window.PhysicalCloudTransfer.cancelarOperacao(operacaoId);
+      });
+      header.append(icone, nome, tamanho, cancelar);
+
+      const barraContainer = document.createElement("div");
+      barraContainer.className = "transfer-barra-container";
+      const barra = document.createElement("div");
+      barra.className = "transfer-barra";
+      barra.style.width = "0%";
+      barraContainer.appendChild(barra);
+
+      const status = document.createElement("div");
+      status.className = "transfer-status";
+      status.textContent = "Preparando…";
+
+      card.append(header, barraContainer, status);
+      $("lista-transfers").appendChild(card);
+      $("transfers-ativos").style.display = "";
+
+         operacoesUI.set(operacaoId, {
+        card, barra, status, tamanho, nome, cancelar,
+        sessaoId, direcao, totalArquivos,
+        arquivosDone: 0, arquivosErro: 0,
+        bytesTotal: 0, bytesAcumulados: 0,
+        totalLotes: Math.ceil(totalArquivos / 100) || 1,
+        loteAtual: 1,
+        amostras: [],
+        ultimoArquivoBytes: 0,
+        iniciadoEm: Date.now(),
+        iniciado: false,
+        finalizado: false,
+      });
+    }
+
+    function atualizarBarra(ui) {
+      const processados = ui.arquivosDone + ui.arquivosErro;
+      const pct = ui.totalArquivos > 0 ? Math.min(100, (processados / ui.totalArquivos) * 100) : 0;
+      ui.barra.style.width = pct + "%";
+    }
+
+        function atualizarTextoStatus(ui) {
+      if (ui.finalizado) return;
+
+      // Bloco C / Bug #5: se a operação ainda não começou a receber/enviar
+      // (está na fila), mostrar "Aguardando..." em vez de "0 / N".
+      if (!ui.iniciado && ui.arquivosDone === 0 && ui.arquivosErro === 0 && ui.bytesAcumulados === 0) {
+        ui.status.textContent = "Aguardando na fila…";
+        return;
+      }
+      ui.iniciado = true;
+
+      const processados = ui.arquivosDone + ui.arquivosErro;
+      const arqTxt = `${processados} / ${ui.totalArquivos} arquivos`;
+      const loteTxt = ui.totalLotes > 1 ? ` · lote ${ui.loteAtual} / ${ui.totalLotes}` : "";
+
+      const agora = Date.now();
+      const ultima = ui.amostras[ui.amostras.length - 1];
+      if (!ultima || agora - ultima.t >= 500) {
+        ui.amostras.push({ t: agora, bytes: ui.bytesAcumulados });
+      } else {
+        ultima.bytes = ui.bytesAcumulados;
+        ultima.t = agora;
+      }
+      while (ui.amostras.length > 8) ui.amostras.shift();
+
+      let velocidadeTxt = "";
+      if (ui.amostras.length >= 2) {
+        const primeira = ui.amostras[0];
+        const ult = ui.amostras[ui.amostras.length - 1];
+        const dt = (ult.t - primeira.t) / 1000;
+        const db = ult.bytes - primeira.bytes;
+        if (dt >= 0.4 && db >= 0) {
+          const bps = db / dt;
+          if (bps > 0) {
+            velocidadeTxt = ` · ${formatarTamanho(bps)}/s`;
+            const restante = Math.max(0, ui.bytesTotal - ui.bytesAcumulados);
+            if (restante > 0) velocidadeTxt += ` · ETA ${formatarEta(restante / bps)}`;
+          }
+        }
+      }
+
+      ui.status.textContent = `${arqTxt}${loteTxt}${velocidadeTxt}`;
+      if (ui.bytesTotal > 0) {
+        ui.tamanho.textContent =
+          `${formatarTamanho(ui.bytesAcumulados)} / ${formatarTamanho(ui.bytesTotal)}`;
+      }
+    }
+    function verificarConclusaoOperacao(operacaoId) {
+      const ui = operacoesUI.get(operacaoId);
+      if (!ui || ui.finalizado) return;
+      if (ui.arquivosDone + ui.arquivosErro >= ui.totalArquivos) {
+        finalizarCartaoOperacao(operacaoId, {
+          arquivosConcluidos: ui.arquivosDone,
+          arquivosComErro: ui.arquivosErro,
+          totalArquivos: ui.totalArquivos,
+        });
+      }
+    }
+
+        function finalizarCartaoOperacao(operacaoId, resultado) {
+      const ui = operacoesUI.get(operacaoId);
+      if (!ui || ui.finalizado) return;
+      ui.finalizado = true;
+      ui.arquivosDone = resultado.arquivosConcluidos ?? ui.arquivosDone;
+      ui.arquivosErro = resultado.arquivosComErro ?? ui.arquivosErro;
+      ui.barra.style.width = "100%";
+
+      const cancelada = !!resultado.cancelada;
+      const recusada = !!resultado.recusada;
+      const comErro = (resultado.arquivosComErro || 0) > 0;
+      const motivo = resultado.motivo || "";
+      const conexaoPerdida = motivo === "conexao-perdida";
+
+      if (conexaoPerdida) {
+        ui.status.textContent = "Interrompida — conexão perdida.";
+        ui.status.style.color = "#ff6b6b";
+      } else if (cancelada) {
+        ui.status.textContent = "Cancelada.";
+        ui.status.style.color = "#ff6b6b";
+      } else if (recusada) {
+        ui.status.textContent = "Recusada pelo destinatário.";
+        ui.status.style.color = "#ff6b6b";
+      } else if (comErro) {
+        ui.status.textContent =
+          `Concluído com ${resultado.arquivosComErro} erro(s) de ${resultado.totalArquivos || ui.totalArquivos}.`;
+        ui.status.style.color = "#ff6b6b";
+      } else {
+        ui.status.textContent =
+          `Concluído: ${resultado.arquivosConcluidos ?? ui.totalArquivos} arquivo(s).`;
+        ui.status.style.color = "var(--accent)";
+      }
+      if (ui.cancelar) ui.cancelar.style.display = "none";
+
+      setTimeout(() => {
+        if (ui.card && ui.card.parentNode) ui.card.parentNode.removeChild(ui.card);
+        operacoesUI.delete(operacaoId);
+        if ($("lista-transfers").children.length === 0) {
+          $("transfers-ativos").style.display = "none";
+        }
+      }, 4000);
+    }
+
+        window.addEventListener("physicalcloud:operacao-iniciada", (ev) => {
+      const { operacaoId, sessaoId, direcao, totalArquivos, totalBytes } = ev.detail;
+      criarCartaoOperacao(operacaoId, direcao, totalArquivos, sessaoId);
+      const ui = operacoesUI.get(operacaoId);
+      
+      if (ui) {
+        ui.bytesTotal = totalBytes || 0;
+        atualizarBarra(ui);
+        
+        // NOVO: Força o texto de aguardando no cartão
+        if (direcao === "envio") {
+          ui.status.textContent = "Aguardando o outro dispositivo aceitar...";
+        } else {
+          atualizarTextoStatus(ui);
+        }
+      }
+
+      // NOVO: Aviso flutuante na tela
+      if (direcao === "envio") {
+        window.PhysicalCloud?.aviso?.("Enviando pedido. Aguardando o outro dispositivo aceitar...");
+      }
+    });
+
+    // Fallback caso operacao-iniciada não tenha sido emitido
+       window.addEventListener("physicalcloud:transfer-inicio", (ev) => {
+      const { operacaoId, sessaoId, direcao, tamanho, nome } = ev.detail;
+      if (!operacaoId) return;
+      if (!operacoesUI.has(operacaoId)) criarCartaoOperacao(operacaoId, direcao, 1, sessaoId);
+      const ui = operacoesUI.get(operacaoId);
+      if (!ui) return;
+      ui.iniciado = true;
+      if (tamanho) ui.bytesTotal = Math.max(ui.bytesTotal, ui.bytesAcumulados + tamanho);
+      if (nome) ui.nome.textContent = nome;
+      atualizarTextoStatus(ui);
+    });
+
+    window.addEventListener("physicalcloud:transfer-progresso", (ev) => {
+      const { operacaoId, enviados, total } = ev.detail;
+      if (!operacaoId) return;
+      const ui = operacoesUI.get(operacaoId);
+      if (!ui || ui.finalizado) return;
+      const delta = enviados - ui.ultimoArquivoBytes;
+      if (delta > 0) ui.bytesAcumulados += delta;
+      ui.ultimoArquivoBytes = enviados;
+      if (total > 0) {
+        ui.bytesTotal = Math.max(ui.bytesTotal, ui.bytesAcumulados + Math.max(0, total - enviados));
+      }
+      atualizarTextoStatus(ui);
+    });
+
+    window.addEventListener("physicalcloud:operacao-progresso", (ev) => {
+      const { operacaoId, arquivosConcluidos, arquivosComErro, totalArquivos, loteAtual, totalLotes } = ev.detail;
+      const ui = operacoesUI.get(operacaoId);
+      if (!ui || ui.finalizado) return;
+      ui.arquivosDone = arquivosConcluidos;
+      ui.arquivosErro = arquivosComErro;
+      ui.totalArquivos = totalArquivos;
+      ui.loteAtual = loteAtual;
+      ui.totalLotes = totalLotes;
+      ui.ultimoArquivoBytes = 0;
+      atualizarBarra(ui);
+      atualizarTextoStatus(ui);
+    });
+
+    
+
+   
+
+    $("btn-limpar-historico")?.addEventListener("click", () => {
+       if(confirm("Apagar todo o histórico?")) {
+          localStorage.removeItem(CHAVE_HIST_ENVIADOS);
+          localStorage.removeItem(CHAVE_HIST_RECEBIDOS);
+          renderizarHistorico();
+       }
+    });
+
+      
+
+    window.addEventListener("physicalcloud:operacao-concluida", (ev) => {
+      finalizarCartaoOperacao(ev.detail.operacaoId, ev.detail);
+    });
+    window.addEventListener("physicalcloud:operacao-concluida-com-erros", (ev) => {
+      finalizarCartaoOperacao(ev.detail.operacaoId, ev.detail);
+    });
+    window.addEventListener("physicalcloud:operacao-recusada", (ev) => {
+      finalizarCartaoOperacao(ev.detail.operacaoId, { recusada: true });
+    });
+       window.addEventListener("physicalcloud:operacao-cancelada", (ev) => {
+      finalizarCartaoOperacao(ev.detail.operacaoId, {
+        cancelada: true,
+        motivo: ev.detail.motivo || "",
+      });
+    });
+
+    // Erro em arquivo — conta arquivosErro no cartão correspondente
+    window.addEventListener("physicalcloud:transfer-erro", (ev) => {
+      const { operacaoId, motivo, nome } = ev.detail || {};
+      if (operacaoId) {
+        const ui = operacoesUI.get(operacaoId);
+        if (ui && !ui.finalizado) {
+          ui.arquivosErro++;
+          atualizarBarra(ui);
+          atualizarTextoStatus(ui);
+          verificarConclusaoOperacao(operacaoId);
+        }
+      }
+      const msg = motivo || "Erro na transferência.";
+      window.PhysicalCloud?.aviso?.((nome ? `[${nome}] ` : "") + msg);
+    });
+
+    // Cleanup defensivo quando a sessão cai (o transfer.js já emite
+    // operacao-cancelada para órfãos via bug #15; isso é só rede de segurança)
+    window.addEventListener("physicalcloud:sessao-encerrada", (ev) => {
+      const sessaoId = ev.detail.sessaoId;
+      const t = window.PhysicalCloudTransfer;
+      for (const [opId, ui] of Array.from(operacoesUI.entries())) {
+        if (ui.sessaoId !== sessaoId) continue;
+        const aindaAtiva = (t?.operacoes?.has(opId)) || (t?.ofertasOperacoes?.has(opId));
+        if (!aindaAtiva) finalizarCartaoOperacao(opId, { cancelada: true });
+      }
+    });
+    // ─── Informações: conexão automática, sobre, privacidade e termos
+    const modalInfo = $("modal-informacoes");
+    function abrirInfo(aba) {
+      if (!modalInfo) return;
+      modalInfo.classList.add("active");
+      document.querySelectorAll("[data-info-tab]").forEach((el) => el.classList.toggle("active", el.dataset.infoTab === aba));
+      document.querySelectorAll("[data-info-panel]").forEach((el) => el.classList.toggle("active", el.dataset.infoPanel === aba));
+    }
+    document.querySelectorAll("[data-info-tab]").forEach((el) => el.addEventListener("click", () => abrirInfo(el.dataset.infoTab)));
+    $("btn-abrir-sobre")?.addEventListener("click", () => abrirInfo("sobre"));
+    $("btn-abrir-privacidade")?.addEventListener("click", () => abrirInfo("privacidade"));
+    function fecharInfo() { modalInfo?.classList.remove("active"); }
+    $("btn-fechar-informacoes")?.addEventListener("click", fecharInfo);
+    $("btn-ok-informacoes")?.addEventListener("click", fecharInfo);
+    $("btn-abrir-app-futuro")?.addEventListener("click", () => $("modal-app-futuro")?.classList.add("active"));
+    $("btn-fechar-app-futuro")?.addEventListener("click", () => $("modal-app-futuro")?.classList.remove("active"));
+    $("btn-app-futuro-ok")?.addEventListener("click", () => $("modal-app-futuro")?.classList.remove("active"));
+
+          // ─── Lógica para Editar Nome (Fase 1) ───
+    let sessaoEditandoNome = null;
+
+    window.abrirModalEditarNome = function(sessaoId, nomeAtual) {
+      sessaoEditandoNome = sessaoId;
+      const input = $("input-editar-nome");
+      if (input) input.value = nomeAtual;
+      
+      $("modal-editar-nome").classList.add("active");
+      setTimeout(() => input?.focus(), 100);
+    };
+
+    $("btn-cancelar-editar-nome")?.addEventListener("click", () => {
+      sessaoEditandoNome = null;
+      $("modal-editar-nome").classList.remove("active");
+    });
+
+    $("btn-salvar-editar-nome")?.addEventListener("click", () => {
+      const input = $("input-editar-nome");
+      if (!sessaoEditandoNome || !input) return;
+
+      const novoNome = input.value.trim().slice(0, 40);
+      const sessoes = window.PhysicalCloud?.sessoes;
+      const s = sessoes ? sessoes.get(sessaoEditandoNome) : null;
+
+      if (novoNome && s && novoNome !== s.nome) {
+        s.nome = novoNome;
+        // Salva o apelido apenas no SEU navegador
+        if (s.deviceId && typeof window.PhysicalCloud.salvarAlias === "function") {
+          window.PhysicalCloud.salvarAlias(s.deviceId, novoNome);
+        }
+        if (typeof window.PhysicalCloud.atualizarListaDispositivos === "function") {
+          window.PhysicalCloud.atualizarListaDispositivos();
+        }
+      }
+
+      sessaoEditandoNome = null;
+      $("modal-editar-nome").classList.remove("active");
+    });
+         // ─── Gerenciamento de Histórico Unificado (Fase 2) ───
+    // Essas constantes devem aparecer APENAS UMA VEZ no arquivo.
+    const CHAVE_HIST_ENVIADOS = "physicalCloudHistoricoEnviados";
+    const CHAVE_HIST_RECEBIDOS = "physicalCloudHistoricoRecebidos";
+
+    function salvarNoHistorico(direcao, item) {
+      try {
+        const chave = direcao === "envio" ? CHAVE_HIST_ENVIADOS : CHAVE_HIST_RECEBIDOS;
+        let lista = JSON.parse(localStorage.getItem(chave) || "[]");
+        lista.unshift(item);
+        if (lista.length > 50) lista = lista.slice(0, 50);
+        localStorage.setItem(chave, JSON.stringify(lista));
+        renderizarHistorico();
+      } catch (e) { console.error("Erro ao salvar histórico:", e); }
+    }
+
+    function renderizarHistorico() {
+      const container = $("historico-container");
+      if (!container) return;
+
+      let env = [], rec = [];
+      try {
+        env = JSON.parse(localStorage.getItem(CHAVE_HIST_ENVIADOS) || "[]");
+        rec = JSON.parse(localStorage.getItem(CHAVE_HIST_RECEBIDOS) || "[]");
+      } catch {}
+
+      if (env.length === 0 && rec.length === 0) {
+        container.style.display = "none";
+        return;
+      }
+      container.style.display = "";
+
+      const renderLista = (lista, elId) => {
+        const el = $(elId);
+        el.innerHTML = "";
+        if (lista.length === 0) {
+           el.innerHTML = '<div style="color:#666;font-size:12px;">Nenhum arquivo</div>';
+           return;
+        }
+        for (const item of lista) {
+          const div = document.createElement("div");
+          div.className = "recebido-item";
+          
+          const nome = item.caminhoRelativo || item.nome || "arquivo";
+          const dataFormatada = new Date(item.data).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+          
+          const icone = document.createElement("span");
+          icone.className = "recebido-icone";
+          icone.textContent = "✔";
+          const info = document.createElement("div");
+          info.className = "recebido-info";
+          const nomeEl = document.createElement("span");
+          nomeEl.className = "recebido-nome";
+          nomeEl.title = String(nome);
+          nomeEl.textContent = String(nome);
+          const detalhe = document.createElement("span");
+          detalhe.className = "recebido-detalhe";
+          detalhe.textContent = `${formatarTamanho(item.tamanho)} · ${dataFormatada}`;
+          info.append(nomeEl, detalhe);
+          div.append(icone, info);
+          el.appendChild(div);
+        }
+      };
+      renderLista(env, "lista-enviados");
+      renderLista(rec, "lista-recebidos");
+    }
+
+    $("btn-limpar-historico")?.addEventListener("click", () => {
+       if(confirm("Apagar todo o histórico de envios e recebimentos?")) {
+          localStorage.removeItem(CHAVE_HIST_ENVIADOS);
+          localStorage.removeItem(CHAVE_HIST_RECEBIDOS);
+          renderizarHistorico();
+       }
+    });
+
+       // Trava de segurança para não salvar o mesmo arquivo duas vezes
+    const historicoSalvoIds = new Set();
+
+    window.addEventListener("physicalcloud:transfer-concluido", (ev) => {
+      const { transferId, operacaoId, tamanho, direcao, nome, caminhoRelativo } = ev.detail;
+
+      // Se o arquivo não tem ID ou já foi salvo, ignora a duplicata
+      if (!transferId || historicoSalvoIds.has(transferId)) return;
+      historicoSalvoIds.add(transferId);
+
+      // 1. Salva no histórico (apenas UMA vez por arquivo)
+      if (direcao === "recebimento" || direcao === "envio") {
+        salvarNoHistorico(direcao, {
+          nome: nome || "arquivo",
+          caminhoRelativo: caminhoRelativo || nome || "arquivo",
+          tamanho: tamanho || 0,
+          data: Date.now()
+        });
+      }
+
+      // 2. Atualiza o progresso visual
+      if (direcao === "recebimento" && operacaoId) {
+        const ui = operacoesUI.get(operacaoId);
+        if (ui && !ui.finalizado) {
+          if (ui.arquivosDone + ui.arquivosErro < ui.totalArquivos) {
+            ui.arquivosDone++;
+          }
+          if (Number.isFinite(tamanho)) ui.bytesAcumulados += tamanho;
+          atualizarBarra(ui);
+          atualizarTextoStatus(ui);
+          verificarConclusaoOperacao(operacaoId);
+        }
+      }
+    });
+
+    // ─── Inicialização ───
+    renderizarHistorico();
+    atualizarEstadoNuvem();
+    atualizarBotoesExplorador();
+
+    // ═════════════════════════════════════════════════════════════════════
+    // BLOCO C — Modo Conexão Automática: UI Orquestrador
+    // ═════════════════════════════════════════════════════════════════════
+
+    (function inicializarAutoModoUI() {
+      const AUTO = window.PhysicalCloudAuto;
+      if (!AUTO) {
+        console.warn("[AutoUI] PhysicalCloudAuto não encontrado — verifique PhysicalCloud-auto.js");
+        return;
+      }
+
+      // ─── Helpers de modal ──────────────────────────────────────────
+      function abrirModal(id) { const el = $(id); if (el) el.classList.add("active"); }
+      function fecharModal(id) { const el = $(id); if (el) el.classList.remove("active"); }
+      function abrirModalDesativacao() {
+        const transferencias = window.PhysicalCloudTransfer;
+        const emAndamento = !!transferencias?.temTransferenciaEmAndamento?.();
+        abrirModal(emAndamento ? "modal-auto-desativar-transferencia" : "modal-auto-desativar");
+      }
+
+      // ─── Atualizar a seção "Seu dispositivo" ──────────────────────
+      function atualizarSecaoAutoDispositivo() {
+        const ativo = AUTO.modoEstaAtivo();
+        const secao = $("auto-meu-dispositivo");
+        const toggle = $("btn-auto-toggle");
+        const container = $("auto-toggle-container");
+
+        if (secao) secao.style.display = ativo ? "" : "none";
+        if (container) container.style.display = "";
+
+        if (toggle) {
+          toggle.textContent = ativo ? "Desativar" : "Ativar";
+          toggle.setAttribute("aria-pressed", ativo ? "true" : "false");
+          toggle.classList.toggle("auto-toggle-btn--ativo", ativo);
+        }
+
+        if (ativo) {
+          const idAtual = AUTO.obterIdAtual();
+          const nomeEl = $("auto-nome-dispositivo");
+          const idEl   = $("auto-id-display");
+          const copiar = $("btn-auto-copiar-id");
+          const novoId = $("btn-auto-novo-id");
+          if (nomeEl) nomeEl.textContent = localStorage.getItem("physicalCloudNomeDispositivo") || "Este dispositivo";
+          if (idEl) idEl.textContent = idAtual || "PC-????????";
+          if (copiar) copiar.style.display = idAtual ? "" : "none";
+          if (novoId) novoId.style.display = "";
+          const desativarCard = $("btn-auto-desativar");
+          if (desativarCard) desativarCard.style.display = "";
+        }
+      }
+
+      // ─── Toggle (ativar / desativar) ──────────────────────────────
+      let aguardandoResultadoBateria = false;
+      let aguardandoResultadoNotificacao = false;
+
+      $("btn-auto-toggle")?.addEventListener("click", () => {
+        if (AUTO.modoEstaAtivo()) {
+          abrirModalDesativacao();
+        } else {
+          // A solicitação nunca fica marcada como dispensada: se o usuário
+          // fechar qualquer modal, ela será oferecida novamente na próxima
+          // tentativa explícita de ativar o modo.
+          aguardandoResultadoBateria = false;
+          aguardandoResultadoNotificacao = false;
+          const status = $("auto-bateria-status");
+          if (status) { status.style.display = "none"; status.textContent = ""; }
+          abrirModal("modal-auto-ativar");
+        }
+      });
+
+      // ─── Ativação: permissões solicitadas somente após ação do usuário ───
+
+      async function executarAtivacaoAuto() {
+        fecharModal("modal-auto-ativar");
+        fecharModal("modal-auto-bateria");
+        const btn = $("btn-auto-confirmar-ativar");
+        if (btn) { btn.disabled = true; btn.textContent = "Conectando…"; }
+        try {
+          const r = await AUTO.ativar();
+          if (!r.ok) alert(r.motivo || "Não foi possível ativar o modo automático.");
+        } catch (erro) {
+          alert(erro?.message || "Não foi possível ativar o modo automático.");
+        } finally {
+          if (btn) { btn.disabled = false; btn.textContent = "Entendi, ativar"; }
+          atualizarSecaoAutoDispositivo();
+        }
+      }
+
+      function precisaIsencaoDeBateria() {
+        if (window.isAndroidApp !== true || !window.AndroidBridge) return false;
+        try {
+          return AndroidBridge.isBatteryOptimizationIgnored() !== true;
+        } catch (erro) {
+          console.warn("[Android] Não foi possível consultar a isenção de bateria:", erro);
+          return true;
+        }
+      }
+
+      function continuarFluxoPermissoesAuto(avisoNotificacao = "") {
+        if (precisaIsencaoDeBateria()) {
+          const status = $("auto-bateria-status");
+          if (status) {
+            status.textContent = avisoNotificacao;
+            status.style.display = avisoNotificacao ? "block" : "none";
+          }
+          abrirModal("modal-auto-bateria");
+        } else {
+          if (avisoNotificacao) alert(avisoNotificacao);
+          executarAtivacaoAuto();
+        }
+      }
+
+      $("btn-auto-confirmar-ativar")?.addEventListener("click", () => {
+        fecharModal("modal-auto-ativar");
+        if (window.isAndroidApp === true && window.AndroidBridge &&
+            typeof AndroidBridge.requestNotificationPermissionForAutoMode === "function") {
+          aguardandoResultadoNotificacao = true;
+          try {
+            AndroidBridge.requestNotificationPermissionForAutoMode();
+          } catch (erro) {
+            aguardandoResultadoNotificacao = false;
+            console.warn("[Android] Não foi possível solicitar notificações:", erro);
+            continuarFluxoPermissoesAuto();
+          }
+          return;
+        }
+        continuarFluxoPermissoesAuto();
+      });
+
+      window.addEventListener("physicalcloud:notification-permission-result", ev => {
+        if (!aguardandoResultadoNotificacao) return;
+        aguardandoResultadoNotificacao = false;
+        const aviso = ev.detail?.granted === true ? "" :
+          "As notificações foram recusadas. O modo ainda pode ser ativado, mas a notificação do serviço pode não aparecer na gaveta do Android.";
+        continuarFluxoPermissoesAuto(aviso);
+      });
+
+      $("btn-auto-bateria-configurar")?.addEventListener("click", () => {
+        if (!window.AndroidBridge || typeof AndroidBridge.requestBatteryExemption !== "function") {
+          const status = $("auto-bateria-status");
+          if (status) {
+            status.textContent = "Não foi possível abrir as configurações automaticamente. Acesse Configurações > Aplicativos > Physical Cloud > Bateria.";
+            status.style.display = "block";
+          }
+          return;
+        }
+        aguardandoResultadoBateria = true;
+        const status = $("auto-bateria-status");
+        if (status) {
+          status.textContent = "Aguardando a resposta do Android…";
+          status.style.display = "block";
+        }
+        try {
+          AndroidBridge.requestBatteryExemption();
+        } catch (erro) {
+          aguardandoResultadoBateria = false;
+          if (status) {
+            status.textContent = "Não foi possível abrir as configurações do Android. Você ainda pode ativar sem essa permissão.";
+            status.style.display = "block";
+          }
+          console.error("[Android] Falha ao abrir configuração de bateria:", erro);
+        }
+      });
+
+      window.addEventListener("physicalcloud:battery-exemption-result", async ev => {
+        if (!aguardandoResultadoBateria) return;
+        aguardandoResultadoBateria = false;
+        if (ev.detail?.granted === true) {
+          await executarAtivacaoAuto();
+          return;
+        }
+        const status = $("auto-bateria-status");
+        if (status) {
+          status.textContent = ev.detail?.unavailable
+            ? "O Android não abriu a tela de configuração. Você pode acessar Configurações > Aplicativos > Physical Cloud > Bateria ou ativar sem essa permissão."
+            : "A permissão não foi concedida. Você pode tentar novamente ou ativar sem essa permissão.";
+          status.style.display = "block";
+        }
+      });
+
+      $("btn-auto-bateria-continuar")?.addEventListener("click", async () => {
+        aguardandoResultadoBateria = false;
+        await executarAtivacaoAuto();
+      });
+      $("btn-auto-bateria-cancelar")?.addEventListener("click", () => {
+        aguardandoResultadoBateria = false;
+        fecharModal("modal-auto-bateria");
+      });
+      $("btn-auto-cancelar-ativar")?.addEventListener("click", () => fecharModal("modal-auto-ativar"));
+
+      async function confirmarDesativacaoAuto(cancelarTransferencias) {
+        const transferencias = window.PhysicalCloudTransfer;
+        if (!cancelarTransferencias && transferencias?.temTransferenciaEmAndamento?.()) {
+          fecharModal("modal-auto-desativar");
+          abrirModal("modal-auto-desativar-transferencia");
+          return;
+        }
+
+        fecharModal("modal-auto-desativar");
+        fecharModal("modal-auto-desativar-transferencia");
+        const btn = cancelarTransferencias ? $("btn-auto-confirmar-desativar-transferencia") : $("btn-auto-confirmar-desativar");
+        if (btn) btn.disabled = true;
+        try {
+          if (cancelarTransferencias) {
+            if (typeof transferencias?.cancelarTodasTransferencias !== "function") {
+              throw new Error("Não foi possível localizar o controle das transferências. O modo automático não foi desativado.");
+            }
+            await transferencias.cancelarTodasTransferencias();
+          }
+          const r = await AUTO.desativar();
+          if (!r.ok) {
+            alert(r.motivo || "Não foi possível desativar o modo automático.");
+          } else if (r.revogacaoPendente) {
+            const status = $("auto-status-conexao");
+            if (status) {
+              status.textContent = "Modo desativado neste dispositivo. A revogação do ID antigo será enviada quando o servidor autenticar a conexão.";
+              status.style.display = "block";
+            }
+          }
+          atualizarSecaoAutoDispositivo();
+        } catch (erro) {
+          alert(erro?.message || "Não foi possível concluir o cancelamento das transferências.");
+        } finally {
+          if (btn) btn.disabled = false;
+        }
+      }
+
+      // Modal desativar — confirma somente se nenhuma transferência estiver ativa.
+      $("btn-auto-confirmar-desativar")?.addEventListener("click", () => confirmarDesativacaoAuto(false));
+      $("btn-auto-cancelar-desativar")?.addEventListener("click", () => fecharModal("modal-auto-desativar"));
+      $("btn-auto-confirmar-desativar-transferencia")?.addEventListener("click", () => confirmarDesativacaoAuto(true));
+      $("btn-auto-cancelar-desativar-transferencia")?.addEventListener("click", () => fecharModal("modal-auto-desativar-transferencia"));
+
+      // Botão "Desativar modo" dentro do card
+      $("btn-auto-desativar")?.addEventListener("click", abrirModalDesativacao);
+
+      function mostrarAvisoMigracaoIdLegado() {
+        try {
+          if (localStorage.getItem("physicalCloudAutoConfiguracaoLegadaAviso") !== "1") return;
+          const status = $("auto-status-conexao");
+          if (status) {
+            status.textContent = "A configuração anterior do ID foi atualizada. O código antigo foi apagado deste aparelho; caso a revogação ainda esteja pendente, o servidor a concluirá quando houver conexão. Ative novamente o modo para gerar um novo ID.";
+            status.style.display = "block";
+            status.style.borderColor = "#80652e";
+            status.style.background = "#211f1a";
+            status.style.color = "#f1c66a";
+          }
+          localStorage.removeItem("physicalCloudAutoConfiguracaoLegadaAviso");
+        } catch {}
+      }
+      mostrarAvisoMigracaoIdLegado();
+      window.addEventListener("physicalcloud:auto-configuracao-legada-removida", mostrarAvisoMigracaoIdLegado);
+      window.addEventListener("physicalcloud:auto-status", ev => {
+        const status = $("auto-status-conexao");
+        if (!status || !ev.detail?.mensagem) return;
+        status.textContent = ev.detail.mensagem;
+        status.style.display = "block";
+        status.style.borderColor = ev.detail.sucesso ? "#26784d" : (ev.detail.erro ? "#8a3d3d" : "#80652e");
+        status.style.background = ev.detail.sucesso ? "#14251b" : (ev.detail.erro ? "#281818" : "#211f1a");
+        status.style.color = ev.detail.sucesso ? "#39ff8f" : (ev.detail.erro ? "#ff9b9b" : "#f1c66a");
+      });
+
+      // ─── Copiar ID ────────────────────────────────────────────────
+      $("btn-auto-copiar-id")?.addEventListener("click", () => {
+        const id = AUTO.obterIdAtual();
+        if (!id) return;
+        const idSemPrefixo = id.startsWith("PC-") ? id.slice(3) : id;
+        navigator.clipboard?.writeText(idSemPrefixo).then(() => {
+          const btn = $("btn-auto-copiar-id");
+          if (btn) { btn.textContent = "Copiado!"; setTimeout(() => btn.textContent = "Copiar", 2000); }
+        }).catch(() => {
+          alert("ID: " + id);
+        });
+      });
+
+      // ─── Gerar novo ID ────────────────────────────────────────────
+      $("btn-auto-novo-id")?.addEventListener("click", () => abrirModal("modal-auto-novo-id"));
+      $("btn-auto-confirmar-novo-id")?.addEventListener("click", async () => {
+        fecharModal("modal-auto-novo-id");
+        // Só cria o novo ID depois de confirmar a desativação/revogação do anterior.
+        const desativacao = await AUTO.desativar();
+        if (!desativacao.ok) {
+          alert(desativacao.motivo || "Não foi possível desativar o ID anterior.");
+          atualizarSecaoAutoDispositivo();
+          return;
+        }
+        if (desativacao.revogacaoPendente) {
+          alert("O modo foi desativado localmente, mas o servidor ainda não confirmou a revogação do ID antigo. Reconecte e tente gerar outro ID novamente.");
+          atualizarSecaoAutoDispositivo();
+          return;
+        }
+        const ativacao = await AUTO.ativar();
+        if (!ativacao.ok) alert(ativacao.motivo || "Não foi possível ativar o novo ID.");
+        atualizarSecaoAutoDispositivo();
+      });
+      $("btn-auto-cancelar-novo-id")?.addEventListener("click", () => fecharModal("modal-auto-novo-id"));
+
+      // ─── Fechar modais ao clicar no overlay ──────────────────────
+      ["modal-auto-ativar", "modal-auto-bateria", "modal-auto-desativar", "modal-auto-desativar-transferencia", "modal-auto-novo-id"].forEach(id => {
+        $(id)?.addEventListener("click", function(e) {
+          if (e.target === this) {
+            if (id === "modal-auto-bateria") aguardandoResultadoBateria = false;
+            if (id === "modal-auto-ativar") aguardandoResultadoNotificacao = false;
+            fecharModal(id);
+          }
+        });
+      });
+
+      // ─── Escuta eventos do modo automático ───────────────────────
+      window.addEventListener("physicalcloud:auto-ativado", atualizarSecaoAutoDispositivo);
+      window.addEventListener("physicalcloud:auto-desativado", atualizarSecaoAutoDispositivo);
+
+      // ─── Init ─────────────────────────────────────────────────────
+      atualizarSecaoAutoDispositivo();
+
+      // A primeira inicialização já desliga qualquer estado de teste antigo.
+      // A interface começa sem conexão automática; o usuário ativa quando desejar.
+    })();
+
+    // ═════════════════════════════════════════════════════════════════════
+    // BLOCO D — Conectar por ID: UI Orquestrador
+    // ═════════════════════════════════════════════════════════════════════
+
+    (function inicializarConectarPorIdUI() {
+      const KEY_NAO_MOSTRAR = "physicalCloudConectarIdNaoMostrar";
+
+      function abrirModalConectarId() {
+        const input = $("input-conectar-id");
+        if (input) { input.value = ""; }
+        const status = $("conectar-id-status");
+        if (status) { status.style.display = "none"; status.textContent = ""; }
+        const naoMostrar = localStorage.getItem(KEY_NAO_MOSTRAR) === "1";
+        const cb = $("conectar-id-nao-mostrar");
+        if (cb) cb.checked = naoMostrar;
+        const aviso = $("aviso-conectar-id");
+        if (aviso) aviso.style.display = naoMostrar ? "none" : "";
+        const overlay = $("modal-conectar-por-id");
+        if (overlay) overlay.classList.add("active");
+        setTimeout(() => input && input.focus(), 100);
+      }
+
+      function fecharModalConectarId() {
+        $("modal-conectar-por-id")?.classList.remove("active");
+      }
+
+      // Botões que abrem o modal
+      ["btn-conectar-por-id", "btn-conectar-por-id-empty"].forEach(id => {
+        $(id)?.addEventListener("click", abrirModalConectarId);
+      });
+
+      $("btn-fechar-conectar-por-id")?.addEventListener("click", fecharModalConectarId);
+      $("btn-cancelar-conectar-id")?.addEventListener("click", fecharModalConectarId);
+      $("modal-conectar-por-id")?.addEventListener("click", function(e) {
+        if (e.target === this) fecharModalConectarId();
+      });
+
+      // Converter input para maiúsculas automaticamente
+      $("input-conectar-id")?.addEventListener("input", function() {
+        let v = this.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+        if (v.startsWith("PC")) v = v.slice(2);
+        this.value = v.slice(0, 27);
+      });
+
+      // Enter no input dispara conexão
+      $("input-conectar-id")?.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") $("btn-confirmar-conectar-id")?.click();
+      });
+
+      // Confirmar conexão
+      $("btn-confirmar-conectar-id")?.addEventListener("click", async () => {
+        const rawInput = ($("input-conectar-id")?.value || "").trim().toUpperCase();
+        if (rawInput.length !== 27) {
+          mostrarStatusConectarId("Digite o ID completo de 27 caracteres.", "#ff6b6b");
+          return;
+        }
+
+        const idCompleto = "PC-" + rawInput;
+        const naoMostrar = $("conectar-id-nao-mostrar")?.checked;
+        if (naoMostrar) {
+          try { localStorage.setItem(KEY_NAO_MOSTRAR, "1"); } catch {}
+        }
+
+        mostrarStatusConectarId("Calculando hash…", "var(--text-muted)");
+        const btn = $("btn-confirmar-conectar-id");
+        if (btn) btn.disabled = true;
+
+        try {
+          // Calcula o hash do ID digitado (nunca enviamos o texto puro)
+          const encoder = new TextEncoder();
+          const data = encoder.encode(idCompleto);
+          const hashBuf = await crypto.subtle.digest("SHA-256", data);
+          const idHash = Array.from(new Uint8Array(hashBuf))
+            .map(b => b.toString(16).padStart(2, "0")).join("");
+
+          // Impede a tentativa de conectar ao próprio ID automático antes de
+          // consultar o servidor. A comparação usa o hash, sem expor o ID.
+          const AUTO = window.PhysicalCloudAuto;
+          const meuIdAutomatico = (AUTO && typeof AUTO.modoEstaAtivo === "function" && AUTO.modoEstaAtivo()
+            && typeof AUTO.obterIdAtual === "function") ? AUTO.obterIdAtual() : null;
+          if (meuIdAutomatico) {
+            const meuHashBuffer = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(meuIdAutomatico));
+            const meuIdHash = Array.from(new Uint8Array(meuHashBuffer))
+              .map(b => b.toString(16).padStart(2, "0")).join("");
+            if (meuIdHash === idHash) {
+              mostrarStatusConectarId("Você não pode conectar ao próprio dispositivo.", "#ff6b6b");
+              return;
+            }
+          }
+
+          mostrarStatusConectarId("Procurando dispositivo…", "var(--text-muted)");
+
+          // Envia ao servidor via PhysicalCloud.enviar
+          const PC = window.PhysicalCloud;
+          const meuDeviceId = (PC && typeof PC.obterDeviceId === "function")
+            ? PC.obterDeviceId()
+            : (localStorage.getItem("physicalCloudDeviceId") || "");
+          const meuNome = localStorage.getItem("physicalCloudNomeDispositivo") || "Dispositivo";
+
+          if (PC && typeof PC.enviar === "function") {
+            PC.enviar({ type: "conectar-por-id", idHash, meuDeviceId, meuNome });
+          } else {
+            throw new Error("WebSocket não conectado.");
+          }
+
+          // Espera resposta via evento (timeout 10s)
+          await new Promise((resolve, reject) => {
+            const timer = setTimeout(() => reject(new Error("timeout")), 10000);
+
+            function onEncontrado(ev) {
+              clearTimeout(timer);
+              window.removeEventListener("physicalcloud:conectar-por-id-encontrado", onEncontrado);
+              window.removeEventListener("physicalcloud:conectar-por-id-erro", onErro);
+              mostrarStatusConectarId("Conectando a " + (ev.detail?.nomeAlvo || "dispositivo") + "…", "var(--accent)");
+              setTimeout(fecharModalConectarId, 1800);
+              resolve();
+            }
+
+            function onErro(ev) {
+              clearTimeout(timer);
+              window.removeEventListener("physicalcloud:conectar-por-id-encontrado", onEncontrado);
+              window.removeEventListener("physicalcloud:conectar-por-id-erro", onErro);
+              const motivos = {
+                "nao-encontrado": "ID não encontrado.",
+                "modo-inativo":   "O dispositivo desativou o modo automático.",
+                "offline":        "Dispositivo offline no momento.",
+                "id-invalido":    "ID inválido.",
+              };
+              reject(new Error(motivos[ev.detail?.motivo] || ev.detail?.mensagem || "Não foi possível conectar."));
+            }
+
+            window.addEventListener("physicalcloud:conectar-por-id-encontrado", onEncontrado);
+            window.addEventListener("physicalcloud:conectar-por-id-erro", onErro);
+          });
+
+        } catch (err) {
+          mostrarStatusConectarId(err.message === "timeout" ? "Sem resposta do servidor." : err.message, "#ff6b6b");
+        } finally {
+          if (btn) btn.disabled = false;
+        }
+      });
+
+      function mostrarStatusConectarId(texto, cor) {
+        const el = $("conectar-id-status");
+        if (!el) return;
+        el.textContent = texto;
+        el.style.color = cor || "inherit";
+        el.style.display = "";
+      }
+
+      // Escuta mensagens do servidor para disparar eventos de UI
+      window.addEventListener("physicalcloud:mensagem-recebida", function(ev) {
+        const msg = ev.detail;
+        if (!msg) return;
+        if (msg.type === "conectar-por-id-encontrado") {
+          window.dispatchEvent(new CustomEvent("physicalcloud:conectar-por-id-encontrado", { detail: msg }));
+        } else if (msg.type === "conectar-por-id-erro") {
+          window.dispatchEvent(new CustomEvent("physicalcloud:conectar-por-id-erro", { detail: msg }));
+        }
+      });
+    })();
+
+  </script>
+</body>
+</html>
+<!-- ═══ FIM DA PARTE 3/3 ═══ -->

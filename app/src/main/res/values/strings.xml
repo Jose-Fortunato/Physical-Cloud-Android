@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Physical Cloud</string>
+    <string name="notification_channel_name">Conexão em segundo plano</string>
+    <string name="notification_waiting">Aguardando conexão…</string>
+    <string name="notification_connected">Dispositivo conectado</string>
+</resources>
