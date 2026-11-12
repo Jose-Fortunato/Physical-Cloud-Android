@@ -1,0 +1,21 @@
+
+
+Correção v5.4.2 — inicialização limpa do modo automático
+- A configuração anterior de modo automático não é oferecida para reativação.
+- Na primeira abertura desta versão, o modo automático fica desligado.
+- O ID/hash antigo é removido do estado ativo local; seu hash é colocado em fila para revogação no servidor.
+- Se o dispositivo estiver offline, a fila permanece salva e a revogação é tentada depois que a conexão WebSocket estiver autenticada.
+- Um novo ID só é gerado e registrado quando o usuário ativa o modo automático manualmente.
+- A limpeza ocorre uma única vez por perfil local; atualizações futuras não apagam o novo ID.
+- Desktop impede duas instâncias simultâneas de competir pelo mesmo deviceId.
+- A limpeza preserva o deviceId do dispositivo; não altera tokens nem tabelas do Supabase.
+
+
+REVISÃO ANDROID — v5.4.3
+- Mantida a arquitetura WebView: o app carrega os assets web empacotados no APK em appassets.androidplatform.net.
+- O serviço foreground usa connectedDevice para a sessão P2P por rede e mantém WakeLock enquanto o modo automático estiver ativo.
+- A Activity/WebView não é finalizada pelo segundo toque em Voltar quando a conexão automática está ativa; o app vai para segundo plano.
+- Hashes e fila de revogações passam a ser cifrados com AES-GCM e chave não exportável do Android Keystore.
+- IDs protegidos podem voltar a registrar seu hash após reiniciar mesmo quando o ID continua bloqueado para exibição.
+- Forçar parada nas Configurações, reinicialização do aparelho e encerramento do processo pelo sistema ainda são limites do Android; não há promessa de WebView restaurada se o processo inteiro morrer.
+- Site público, backend Render e tabelas Supabase não foram alterados.

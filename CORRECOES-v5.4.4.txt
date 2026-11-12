@@ -1,0 +1,15 @@
+PHYSICAL CLOUD ANDROID — PATCH DE REVISÃO 5.4.4 / APP 1.0.3
+
+Alterações feitas neste pacote:
+- Adicionado import explícito de android.app.PendingIntent em PhysicalCloudService.kt.
+- O serviço deixa de permanecer em foreground quando o modo automático está desligado e não há conexão/transferência ativa.
+- O serviço só é iniciado automaticamente na abertura se auto_mode_active estiver persistido como true.
+- Atualizado versionCode para 4 e versionName para 1.0.3.
+- Mantida a arquitetura existente: WebView carrega os assets www empacotados no APK; não foi criada interface nativa paralela nem alterado o site público.
+- Mantido o tipo de serviço connectedDevice e as permissões existentes.
+
+Limitações/validações pendentes:
+- Não foi possível executar Gradle/Android SDK neste ambiente; APK não compilado.
+- compileSdk/targetSdk permanecem em 34. A migração para API 36 requer atualizar AGP/Gradle e validar dependências; não foi alterada às cegas.
+- connectedDevice/foreground service não garante execução após Forçar parada, nem contorna Doze/fabricantes agressivos.
+- Não houve teste em aparelho físico nem contra Render/Supabase reais.

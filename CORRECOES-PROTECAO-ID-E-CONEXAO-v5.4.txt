@@ -1,0 +1,74 @@
+PHYSICAL CLOUD v5.4.2 — INICIALIZAÇÃO LIMPA DO MODO AUTOMÁTICO
+
+ESCOPO
+- Esta atualização altera somente o aplicativo Desktop e o aplicativo Android.
+- O site não recebe modo de conexão automática nem tela de senha.
+- O servidor/Render e as tabelas do Supabase não recebem senha e não precisam de migração SQL.
+
+COMPORTAMENTO NA PRIMEIRA ABERTURA
+- O modo de conexão automática começa desligado.
+- A antiga pergunta "manter o ID anterior?" foi removida.
+- Na primeira execução desta versão em cada perfil local, qualquer estado antigo do modo automático é desativado.
+- Se houver hash do ID antigo, ele é guardado numa fila local de revogação.
+- Se o aparelho estiver offline ou o Render ainda não estiver autenticado, a fila permanece salva e a revogação é tentada depois da autenticação.
+- O ID automático antigo é retirado do estado ativo local. Um ID novo só é gerado quando o usuário ativa o modo manualmente.
+- A limpeza é marcada como concluída uma única vez. Atualizações futuras não devem apagar o ID criado e ativado nesta versão.
+- O identificador técnico local do dispositivo (deviceId) é preservado; ele não é o ID público PC-... do modo automático.
+
+PRIVACIDADE ENTRE USUÁRIOS
+- O ID PC-... é guardado no armazenamento local do perfil do aplicativo, não dentro do instalador/ZIP.
+- No Desktop, o perfil de dados do Electron é separado por usuário do sistema.
+- No Android, os dados ficam no sandbox do aplicativo identificado por com.physicalcloud.
+- Um usuário que instala o aplicativo em outro computador ou celular não recebe o ID de desenvolvimento de outra pessoa.
+- Atualizações do mesmo aplicativo podem preservar dados locais; por isso esta versão executa a limpeza única descrita acima.
+
+PROTEÇÃO OPCIONAL POR SENHA
+- A senha protege somente o ID armazenado e exibido localmente.
+- AES-256-GCM e PBKDF2-HMAC-SHA-256 (600.000 iterações).
+- A senha não é enviada ao Render, ao servidor ou ao Supabase.
+- A senha não é uma autenticação adicional do servidor. Quem já conhece o ID ainda pode tentar utilizá-lo.
+
+RECONEXÃO
+- A ativação aguarda a autenticação real do WebSocket, não apenas a abertura do socket.
+- O registro do hash depende da confirmação correlacionada do servidor.
+- Revogações antigas são processadas antes de qualquer novo registro automático.
+
+VERIFICAÇÕES EXECUTADAS NESTA REVISÃO
+- `node --check` nos arquivos JavaScript dos dois projetos.
+- Verificação sintática dos scripts embutidos nos HTMLs de Desktop e Android.
+- Teste simulado com estado antigo ativo: modo desligado, ID antigo removido e hash colocado na fila.
+- Teste simulado offline: revogação permanece pendente; após autenticação, é enviada e confirmada.
+- Teste de ativação manual após a limpeza: novo ID gerado e registro enviado somente após confirmação.
+- Teste de abertura posterior: o ID criado pelo usuário nesta versão é preservado e re-registrado após reconexão; a limpeza não se repete.
+- Módulo PhysicalCloud-auto.js de Desktop e Android comparado byte a byte.
+- Confirmação de que o diálogo para reativar configuração anterior não existe mais.
+
+LIMITES DOS TESTES
+- Não foi possível compilar o instalador Windows nem o APK neste ambiente.
+- Não foi realizado teste de rede ao vivo com Render/Supabase ou em dispositivos físicos.
+- O teste da revogação foi feito com WebSocket/ACK simulados; a operação real ainda precisa ser conferida no ambiente publicado.
+
+PUBLICAÇÃO
+- Gere o instalador Desktop usando o projeto Electron atualizado.
+- Gere o APK usando o projeto Android atualizado.
+- Não publique alterações na Web ou no servidor por causa desta correção; eles não fazem parte deste pacote.
+
+
+ADENDO — REVISÃO ANDROID 5.4.3
+A arquitetura WebView foi preservada. MainActivity carrega os assets web incluídos em app/src/main/assets/www/ via WebViewAssetLoader (appassets.androidplatform.net); não carrega o site público por URL. O backend Render/Supabase continua sendo remoto para sinalização/autenticação.
+
+Correções desta revisão:
+- Corrigido comentário XML inválido em themes.xml.
+- Credenciais hash de ID, fila de revogações e ID legado usam AES-GCM com chave não exportável do Android Keystore. Valores legados no localStorage são migrados para o armazenamento cifrado e removidos do localStorage.
+- Re-registro usa o hash cifrado persistido quando o ID protegido está bloqueado após reinicialização; o ID puro permanece oculto até a senha correta.
+- Foreground service alterado de dataSync para connectedDevice, com permissões exigidas para conexão de rede, evitando o limite de 6h do tipo dataSync para apps que target Android 15+.
+- Serviço mantém WakeLock renovável enquanto o modo automático está ativo, além de sessões conectadas/transferências.
+- Estado do modo automático é sincronizado com o serviço nativo e persistido em SharedPreferences.
+- Voltar duas vezes com modo automático ativo manda a tarefa para segundo plano em vez de destruir a Activity/WebView.
+- Removido o alarme que reiniciava apenas o serviço sem reconstruir a WebView; esse comportamento dava falsa impressão de que a conexão JS havia sido restaurada.
+- Versão Android incrementada para versionCode 3 / versionName 1.0.2.
+
+Limitações não mascaradas:
+- Forçar parada nas Configurações interrompe o app até o usuário abri-lo novamente.
+- Se o Android encerrar o processo inteiro, START_STICKY pode recriar o serviço, mas não garante recriação da Activity/WebView; portanto não prometemos recebimento após morte completa do processo.
+- Não foi possível compilar APK neste ambiente porque não há Android SDK/Gradle instalados. O projeto requer build e teste em Android Studio e aparelhos reais.

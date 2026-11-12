@@ -1,0 +1,30 @@
+PHYSICAL CLOUD ANDROID — ATUALIZAÇÃO 5.4.5
+
+Alterações desta atualização
+
+1. Remoção completa da proteção por senha do ID automático
+- Removidas as opções de proteger, bloquear e desbloquear o ID.
+- Removido o fluxo "Esqueci a senha" e a derivação criptográfica de senha.
+- IDs antigos que estavam armazenados no formato protegido são descartados durante a atualização.
+- O hash antigo é colocado na fila de revogação e será revogado no servidor quando houver conexão autenticada. O usuário precisa ativar novamente o modo para gerar um novo ID.
+
+2. Confirmação ao desativar durante uma transferência
+- Se houver transferência em andamento ou arquivos pendentes na fila, é exibido um modal específico.
+- A confirmação cancela as operações/transferências e depois desativa o modo automático.
+- Cancelar o modal mantém as operações e o modo automático ativos.
+- A confirmação normal também verifica novamente o estado das transferências antes de desativar, evitando uma corrida entre a abertura do modal e o clique de confirmação.
+
+3. Ajustes no serviço em segundo plano
+- Ativar o modo automático não é mais reportado como se houvesse uma conexão P2P ativa.
+- Quando a última transferência termina e não há conexão nem modo automático ativo, o serviço encerra o foreground e remove a notificação de conexão.
+
+4. Comunicação do recurso
+- A descrição e o modal de ativação explicam que o ID permite enviar arquivos à distância sem estar perto do dispositivo de destino.
+- O texto informa que o aparelho de destino precisa estar ligado, conectado à internet e com o modo automático ativo.
+
+Limitação mantida intencionalmente
+- Não foi alterada a arquitetura da WebView para continuar a comunicação depois que a tarefa do app é removida da tela de recentes. Esse comportamento continua fora do escopo desta atualização.
+
+Validação
+- Esta atualização foi revisada estaticamente e os arquivos JavaScript foram submetidos a verificação de sintaxe.
+- A geração do APK e testes em aparelho físico ainda precisam ser executados em um ambiente com Android SDK/Gradle e em dispositivos reais.

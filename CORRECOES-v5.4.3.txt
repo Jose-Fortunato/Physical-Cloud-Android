@@ -1,0 +1,31 @@
+PHYSICAL CLOUD — ANDROID v5.4.3
+
+ESCOPO E ARQUITETURA
+- O aplicativo continua utilizando a aplicação Web do Physical Cloud dentro da WebView.
+- PhysicalCloud.js continua responsável pelo WebSocket, autenticação, reconexão e sinalização.
+- Nenhum WebSocket paralelo foi criado no Kotlin/serviço nativo.
+- O serviço Android mantém o estado de execução/CPU e a notificação; não substitui a lógica Web.
+
+CORREÇÕES
+1. Corrigido comentário XML inválido em app/src/main/res/values/themes.xml.
+2. O armazenamento protegido passou a criptografar ID e hash juntos (AES-256-GCM; PBKDF2-HMAC-SHA-256, 600.000 iterações). O hash não é salvo em texto puro quando a senha está ativa.
+3. Registros protegidos no formato v1 são migrados para v2 quando desbloqueados.
+4. Depois de reiniciar o processo, o ID protegido exige desbloqueio para que o hash seja recuperado da carga cifrada e o registro automático seja retomado.
+5. Bloquear a exibição do ID durante a execução não apaga o hash da memória; a reconexão da WebView pode continuar.
+6. Desativar não depende de senha: o cliente envia uma solicitação autenticada pelo deviceId para revogar todos os IDs automáticos daquele dispositivo.
+7. A fila de revogação persiste quando o servidor está indisponível e é processada após autenticação.
+8. O servidor recebeu a mensagem desregistrar-ids-do-dispositivo, usando deviceId autenticado existente. Não há alteração de token, tabela ou SQL.
+9. O serviço Android persiste apenas o booleano de modo automático nas SharedPreferences e restaura o WakeLock ao ser recriado. O estado é reapresentado periodicamente pelo bridge da WebView.
+10. O serviço mantém WakeLock enquanto o modo automático está ativo, mesmo sem outro peer conectado. A conexão continua na WebView.
+11. Versionamento Android atualizado para versionCode 4 / versionName 1.0.3.
+
+LIMITES
+- A conexão depende da WebView e dos arquivos HTML/JavaScript incluídos no APK. O serviço nativo não consegue recriar uma sessão WebSocket se o processo/Activity que hospeda a WebView for encerrado pelo sistema.
+- Foreground Service e WakeLock melhoram a continuidade em segundo plano, mas não anulam force-stop, encerramento pelo usuário, economia agressiva de bateria do fabricante ou todas as políticas do Android.
+- targetSdk permanece em 34 nesta entrega. Antes de publicar na Play Store será necessária migração planejada para API 36 e revisão do tipo de foreground service. Android 15 limita serviços dataSync para apps que segmentam API 35 ou superior a seis horas em 24h.
+
+VALIDAÇÕES
+- node --check nos módulos JavaScript do app e no servidor.
+- XML parseado em todos os recursos Android.
+- Testes simulados de início limpo, revogação pendente, ativação com senha, armazenamento sem ID/hash em claro, bloqueio, reconexão, reinício/desbloqueio e desativação com ID bloqueado.
+- Build APK não executado: o ambiente não possui Gradle wrapper/Gradle instalado nem Android SDK configurado. É necessário compilar e validar no Android Studio.

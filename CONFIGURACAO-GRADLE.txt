@@ -1,0 +1,27 @@
+CONFIGURACAO EFETIVA DO BUILD — PHYSICAL CLOUD ANDROID
+
+Versoes alinhadas para o build pelo GitHub Actions:
+- Android Gradle Plugin (AGP): 8.4.2 (build.gradle)
+- Kotlin Gradle Plugin (KGP): 2.0.20 (build.gradle)
+- Gradle: 8.6 (gradle/wrapper/gradle-wrapper.properties)
+- JDK: 17
+- compileSdk / targetSdk: 34
+
+O AGP 8.4 requer Gradle 8.6 e JDK 17. O KGP 2.0.20 possui faixa de compatibilidade
+que inclui AGP 8.4.x e Gradle 8.6.
+
+IMPORTANTE SOBRE O WRAPPER:
+Este projeto contem gradle-wrapper.properties, mas nao contem gradlew,
+gradlew.bat nem gradle-wrapper.jar. Para evitar depender do Android Studio
+ou de um Wrapper incompleto, o workflow .github/workflows/compilar-apk.yml
+instala Gradle 8.6 diretamente no runner do GitHub Actions e executa:
+    gradle --no-daemon --stacktrace :app:assembleDebug
+
+SDK Android solicitado pelo workflow:
+- platforms;android-34
+- build-tools;34.0.0
+
+O primeiro workflow gera um APK DEBUG para teste. Ele nao e o APK RELEASE
+assinado para distribuicao publica. Para distribuicao, configure uma chave
+release persistente como GitHub Secrets; nunca coloque o arquivo .jks/.keystore
+ou suas senhas no repositorio.

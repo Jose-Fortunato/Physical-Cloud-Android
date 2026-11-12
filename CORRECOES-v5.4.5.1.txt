@@ -1,0 +1,15 @@
+CORREÇÕES v5.4.5.1 — AJUSTES ANDROID STUDIO E PERMISSÕES
+
+- Ícone Android regenerado a partir do mesmo arquivo icon.png utilizado pelo Desktop, em todas as densidades e no formato adaptive icon.
+- Removida a solicitação de permissões no onCreate. O app não solicita permissões ao abrir.
+- Removidas permissões amplas de armazenamento: seleção de arquivos e pastas utiliza o Storage Access Framework (SAF).
+- Permissão de notificações passa a ser solicitada somente quando o usuário confirma a ativação da Conexão Automática.
+- A solicitação de isenção de otimização de bateria continua vinculada à ativação; fechar/dispensar a janela não grava uma decisão permanente e a oferta reaparece na próxima tentativa.
+- Toolchain fixada: AGP 8.4.2, Kotlin 1.9.24, Gradle 8.6.
+
+VALIDAÇÃO: revisão estática dos arquivos e sintaxe JavaScript. Não foi possível executar Gradle/Android SDK neste ambiente; compilação e teste em aparelho ainda precisam ser confirmados no Android Studio.
+
+AJUSTE DE INTERFACE — REMOÇÃO DA CENTRAL DE INSTALADORES
+- Removido do app Android o atalho “Downloads dos aplicativos” e a aba/painel de instaladores.
+- Mantidas as funções de receber e salvar arquivos transferidos entre dispositivos; elas não são downloads de instaladores.
+- A publicação do APK fica para a próxima etapa, fora desta alteração.
